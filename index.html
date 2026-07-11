@@ -368,16 +368,34 @@
     <div id="listeAnniversaires" style="margin-top: 20px;"></div>
 
   </div>
+<div id="enveloppes" class="section">
 
-  <div id="enveloppes" class="section">
+  <h2>Préparer une enveloppe</h2>
 
-    <h2>Enveloppes</h2>
+  <button type="button" onclick="chargerContactsEnveloppe()">
+    Charger mes contacts
+  </button>
 
-    <p>Cette section sera ajoutée prochainement.</p>
+  <label for="contactEnveloppe">Choisir un contact</label>
 
+  <select id="contactEnveloppe" onchange="voirEnveloppe()">
+    <option value="">Choisir un contact</option>
+  </select>
+
+  <div
+    id="apercuEnveloppe"
+    style="margin-top:20px; padding:30px; border:2px solid #333; background:white;"
+  >
+    L’adresse apparaîtra ici.
   </div>
 
+  <button type="button" onclick="imprimerEnveloppeSimple()">
+    Imprimer
+  </button>
+
 </div>
+  
+ 
 
 <footer>
   Dany Diamond — Courtier immobilier agréé DA
