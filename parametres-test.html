@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paramètres CRM Dany Diamond</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 30px;
+      color: #1f2937;
+    }
+
+    .boite {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 11px 16px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 6px;
+      background: #1f2937;
+      color: white;
+      cursor: pointer;
+    }
+
+    .supprimer {
+      background: #b91c1c;
+      margin-top: 0;
+    }
+
+    .ligne {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+      padding: 12px;
+      background: #f9fafb;
+      border: 1px solid #ddd;
+      border-radius: 7px;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="boite">
+
+  <h1>Paramètres du CRM</h1>
+
+  <p>
+    Cette page de test permet d’ajouter ou de supprimer des provenances
+    sans modifier le CRM principal.
+  </p>
+
+  <label for="nouvelleProvenance">
+    Nouvelle provenance
+  </label>
+
+  <input
+    id="nouvelleProvenance"
+    type="text"
+    placeholder="Exemple : Centris"
+  >
+
+  <button type="button" onclick="ajouterProvenance()">
+    Ajouter la provenance
+  </button>
+
+  <div id="message" class="message"></div>
+
+  <h2>Provenances enregistrées</h2>
+
+  <div id="listeProvenances"></div>
+
+</div>
+
+<script>
+  const CLE_PROVENANCES = 'provenancesDanyDiamond';
+
+  const provenancesDefaut = [
+    'Facebook',
+    'Google',
+    'Site Web',
+    'Référence',
+    'Soumissions Courtiers',
+    'Visite libre',
+    'Appel entrant',
+    'Ami ou amie',
+    'Ancien client',
+    'Autre'
+  ];
+
+  function obtenirProvenances() {
+    const sauvegardees =
+      JSON.parse(localStorage.getItem(CLE_PROVENANCES));
+
+    if (sauvegardees && sauvegardees.length > 0) {
+      return sauvegardees;
+    }
+
+    localStorage.setItem(
+      CLE_PROVENANCES,
+      JSON.stringify(provenancesDefaut)
+    );
+
+    return provenancesDefaut;
+  }
+
+  function sauvegarderProvenances(provenances) {
+    localStorage.setItem(
+      CLE_PROVENANCES,
+      JSON.stringify(provenances)
+    );
+  }
+
+  function ajouterProvenance() {
+    const champ =
+      document.getElementById('nouvelleProvenance');
+
+    const nouvelle = champ.value.trim();
+
+    if (nouvelle === '') {
+      alert('Veuillez inscrire une provenance.');
+      return;
+    }
+
+    const provenances = obtenirProvenances();
+
+    const existe = provenances.some(function(provenance) {
+      return provenance.toLowerCase() === nouvelle.toLowerCase();
+    });
+
+    if (existe) {
+      alert('Cette provenance existe déjà.');
+      return;
+    }
+
+    const positionAutre =
+      provenances.indexOf('Autre');
+
+    if (positionAutre >= 0) {
+      provenances.splice(positionAutre, 0, nouvelle);
+    } else {
+      provenances.push(nouvelle);
+    }
+
+    sauvegarderProvenances(provenances);
+
+    champ.value = '';
+
+    afficherProvenances();
+    afficherMessage('La provenance a été ajoutée.');
+  }
+
+  function supprimerProvenance(index) {
+    const provenances = obtenirProvenances();
+    const provenance = provenances[index];
+
+    if (provenance === 'Autre') {
+      alert('La provenance Autre doit rester dans la liste.');
+      return;
+    }
+
+    const confirmation = confirm(
+      'Voulez-vous supprimer la provenance « ' +
+      provenance +
+      ' » ?'
+    );
+
+    if (!confirmation) {
+      return;
+    }
+
+    provenances.splice(index, 1);
+
+    sauvegarderProvenances(provenances);
+    afficherProvenances();
+  }
+
+  function afficherProvenances() {
+    const provenances = obtenirProvenances();
+
+    const liste =
+      document.getElementById('listeProvenances');
+
+    liste.innerHTML = '';
+
+    provenances.forEach(function(provenance, index) {
+      const ligne = document.createElement('div');
+      ligne.className = 'ligne';
+
+      const nom = document.createElement('span');
+      nom.textContent = provenance;
+
+      const bouton = document.createElement('button');
+      bouton.type = 'button';
+      bouton.textContent = 'Supprimer';
+      bouton.className = 'supprimer';
+
+      bouton.onclick = function() {
+        supprimerProvenance(index);
+      };
+
+      ligne.appendChild(nom);
+      ligne.appendChild(bouton);
+
+      liste.appendChild(ligne);
+    });
+  }
+
+  function afficherMessage(texte) {
+    const message =
+      document.getElementById('message');
+
+    message.textContent = texte;
+    message.style.display = 'block';
+
+    setTimeout(function() {
+      message.style.display = 'none';
+    }, 3000);
+  }
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    afficherProvenances
+  );
+</script>
+
+</body>
+</html>
