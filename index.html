@@ -117,6 +117,15 @@
       font-weight: bold;
     }
 
+    .recherche {
+      margin-bottom: 20px;
+    }
+
+    .recherche input {
+      font-size: 16px;
+      border: 2px solid #1f2937;
+    }
+
     .prospect {
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -127,6 +136,14 @@
 
     .prospect strong {
       font-size: 18px;
+    }
+
+    .aucun-resultat {
+      padding: 20px;
+      text-align: center;
+      background: #f9fafb;
+      border-radius: 8px;
+      color: #6b7280;
     }
 
     footer {
@@ -154,7 +171,7 @@
 
     <div class="card" onclick="ouvrirSection('contacts')">
       <h2>Contacts</h2>
-      <p>Voir les prospects enregistrés.</p>
+      <p>Rechercher et consulter les contacts.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('suivis')">
@@ -235,6 +252,17 @@
 
   <div id="contacts" class="section">
     <h2>Contacts enregistrés</h2>
+
+    <div class="recherche">
+      <label for="champRecherche">Rechercher un contact</label>
+      <input
+        id="champRecherche"
+        type="search"
+        placeholder="Nom, téléphone, courriel, adresse, type ou provenance"
+        oninput="rechercherProspects()"
+      >
+    </div>
+
     <div id="listeProspects"></div>
   </div>
 
@@ -268,6 +296,7 @@
     document.getElementById(id).style.display = 'block';
 
     if (id === 'contacts') {
+      document.getElementById('champRecherche').value = '';
       afficherProspects();
     }
   }
@@ -319,18 +348,24 @@
     viderFormulaire();
   }
 
-  function afficherProspects() {
-    const prospects = obtenirProspects();
+  function afficherProspects(prospectsFiltres) {
+    const prospects = prospectsFiltres || obtenirProspects();
     const liste = document.getElementById('listeProspects');
 
     liste.innerHTML = '';
 
     if (prospects.length === 0) {
-      liste.textContent = 'Aucun prospect enregistré.';
+      liste.innerHTML =
+        '<div class="aucun-resultat">Aucun contact trouvé.</div>';
       return;
     }
 
-    prospects.forEach(function(prospect, index) {
+    prospects.forEach(function(element) {
+      const prospect = element.prospect || element;
+      const index = element.index !== undefined
+        ? element.index
+        : obtenirProspects().indexOf(prospect);
+
       const fiche = document.createElement('div');
       fiche.className = 'prospect';
 
@@ -370,6 +405,45 @@
     });
   }
 
+  function rechercherProspects() {
+    const recherche =
+      document.getElementById('champRecherche').value
+        .trim()
+        .toLowerCase();
+
+    const prospects = obtenirProspects();
+
+    if (recherche === '') {
+      afficherProspects();
+      return;
+    }
+
+    const resultats = prospects
+      .map(function(prospect, index) {
+        return {
+          prospect: prospect,
+          index: index
+        };
+      })
+      .filter(function(element) {
+        const prospect = element.prospect;
+
+        const texte =
+          (prospect.prenom || '') + ' ' +
+          (prospect.nom || '') + ' ' +
+          (prospect.telephone || '') + ' ' +
+          (prospect.courriel || '') + ' ' +
+          (prospect.adresse || '') + ' ' +
+          (prospect.provenance || '') + ' ' +
+          (prospect.type || '') + ' ' +
+          (prospect.commentaires || '');
+
+        return texte.toLowerCase().includes(recherche);
+      });
+
+    afficherProspects(resultats);
+  }
+
   function modifierProspect(index) {
     const prospects = obtenirProspects();
     const prospect = prospects[index];
@@ -393,6 +467,7 @@
       'inline-block';
 
     ouvrirSection('prospects');
+
     window.scrollTo({
       top: document.getElementById('prospects').offsetTop,
       behavior: 'smooth'
@@ -417,7 +492,7 @@
 
     prospects.splice(index, 1);
     sauvegarderProspects(prospects);
-    afficherProspects();
+    rechercherProspects();
   }
 
   function annulerModification() {
@@ -444,6 +519,7 @@
 
   function afficherMessage(message) {
     const zoneMessage = document.getElementById('messageSucces');
+
     zoneMessage.textContent = message;
     zoneMessage.style.display = 'block';
 
