@@ -126,7 +126,8 @@
       border: 2px solid #1f2937;
     }
 
-    .prospect {
+    .prospect,
+    .suivi {
       border: 1px solid #ddd;
       border-radius: 8px;
       padding: 16px;
@@ -134,7 +135,8 @@
       background: #fafafa;
     }
 
-    .prospect strong {
+    .prospect strong,
+    .suivi strong {
       font-size: 18px;
     }
 
@@ -144,6 +146,18 @@
       background: #f9fafb;
       border-radius: 8px;
       color: #6b7280;
+    }
+
+    .suivi-retard {
+      border-left: 6px solid #b91c1c;
+    }
+
+    .suivi-aujourdhui {
+      border-left: 6px solid #d97706;
+    }
+
+    .suivi-futur {
+      border-left: 6px solid #15803d;
     }
 
     footer {
@@ -176,7 +190,7 @@
 
     <div class="card" onclick="ouvrirSection('suivis')">
       <h2>Suivis</h2>
-      <p>Gérer les appels et rendez-vous.</p>
+      <p>Ajouter les appels, rendez-vous et rappels.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('anniversaires')">
@@ -267,8 +281,42 @@
   </div>
 
   <div id="suivis" class="section">
-    <h2>Suivis</h2>
-    <p>Cette section sera ajoutée prochainement.</p>
+    <h2>Ajouter un suivi</h2>
+
+    <label for="contactSuivi">Contact</label>
+    <select id="contactSuivi"></select>
+
+    <label for="dateSuivi">Date du suivi</label>
+    <input id="dateSuivi" type="date">
+
+    <label for="heureSuivi">Heure</label>
+    <input id="heureSuivi" type="time">
+
+    <label for="typeSuivi">Type de suivi</label>
+    <select id="typeSuivi">
+      <option>Appel téléphonique</option>
+      <option>Courriel</option>
+      <option>Texto</option>
+      <option>Rendez-vous</option>
+      <option>Visite</option>
+      <option>Relance</option>
+      <option>Autre</option>
+    </select>
+
+    <label for="noteSuivi">Note</label>
+    <textarea
+      id="noteSuivi"
+      placeholder="Exemple : rappeler pour discuter de l’estimation"
+    ></textarea>
+
+    <button type="button" onclick="enregistrerSuivi()">
+      Enregistrer le suivi
+    </button>
+
+    <div id="messageSuivi" class="message"></div>
+
+    <h2 style="margin-top: 35px;">Suivis à faire</h2>
+    <div id="listeSuivis"></div>
   </div>
 
   <div id="anniversaires" class="section">
@@ -299,6 +347,11 @@
       document.getElementById('champRecherche').value = '';
       afficherProspects();
     }
+
+    if (id === 'suivis') {
+      remplirListeContactsSuivi();
+      afficherSuivis();
+    }
   }
 
   function obtenirProspects() {
@@ -309,6 +362,17 @@
     localStorage.setItem(
       'prospectsDanyDiamond',
       JSON.stringify(prospects)
+    );
+  }
+
+  function obtenirSuivis() {
+    return JSON.parse(localStorage.getItem('suivisDanyDiamond')) || [];
+  }
+
+  function sauvegarderSuivis(suivis) {
+    localStorage.setItem(
+      'suivisDanyDiamond',
+      JSON.stringify(suivis)
     );
   }
 
@@ -467,11 +531,6 @@
       'inline-block';
 
     ouvrirSection('prospects');
-
-    window.scrollTo({
-      top: document.getElementById('prospects').offsetTop,
-      behavior: 'smooth'
-    });
   }
 
   function supprimerProspect(index) {
@@ -526,6 +585,188 @@
     setTimeout(function() {
       zoneMessage.style.display = 'none';
     }, 3000);
+  }
+
+  function remplirListeContactsSuivi() {
+    const prospects = obtenirProspects();
+    const select = document.getElementById('contactSuivi');
+
+    select.innerHTML = '';
+
+    if (prospects.length === 0) {
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = 'Aucun contact enregistré';
+      select.appendChild(option);
+      return;
+    }
+
+    prospects.forEach(function(prospect, index) {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = prospect.prenom + ' ' + prospect.nom;
+      select.appendChild(option);
+    });
+  }
+
+  function enregistrerSuivi() {
+    const contactIndex = document.getElementById('contactSuivi').value;
+    const date = document.getElementById('dateSuivi').value;
+    const heure = document.getElementById('heureSuivi').value;
+    const type = document.getElementById('typeSuivi').value;
+    const note = document.getElementById('noteSuivi').value.trim();
+
+    if (contactIndex === '') {
+      alert('Veuillez d’abord enregistrer un contact.');
+      return;
+    }
+
+    if (date === '') {
+      alert('Veuillez choisir une date de suivi.');
+      return;
+    }
+
+    if (note === '') {
+      alert('Veuillez inscrire une note pour le suivi.');
+      return;
+    }
+
+    const prospects = obtenirProspects();
+    const contact = prospects[Number(contactIndex)];
+
+    const suivi = {
+      contactNom: contact.prenom + ' ' + contact.nom,
+      contactIndex: Number(contactIndex),
+      date: date,
+      heure: heure,
+      type: type,
+      note: note,
+      complete: false
+    };
+
+    const suivis = obtenirSuivis();
+    suivis.push(suivi);
+
+    suivis.sort(function(a, b) {
+      return (a.date + a.heure).localeCompare(b.date + b.heure);
+    });
+
+    sauvegarderSuivis(suivis);
+
+    document.getElementById('dateSuivi').value = '';
+    document.getElementById('heureSuivi').value = '';
+    document.getElementById('typeSuivi').selectedIndex = 0;
+    document.getElementById('noteSuivi').value = '';
+
+    const message = document.getElementById('messageSuivi');
+    message.textContent = 'Le suivi a été enregistré avec succès.';
+    message.style.display = 'block';
+
+    setTimeout(function() {
+      message.style.display = 'none';
+    }, 3000);
+
+    afficherSuivis();
+  }
+
+  function afficherSuivis() {
+    const suivis = obtenirSuivis();
+    const liste = document.getElementById('listeSuivis');
+
+    liste.innerHTML = '';
+
+    const suivisActifs = suivis
+      .map(function(suivi, index) {
+        return { suivi: suivi, index: index };
+      })
+      .filter(function(element) {
+        return !element.suivi.complete;
+      });
+
+    if (suivisActifs.length === 0) {
+      liste.innerHTML =
+        '<div class="aucun-resultat">Aucun suivi à faire.</div>';
+      return;
+    }
+
+    const aujourdHui = new Date();
+    aujourdHui.setHours(0, 0, 0, 0);
+
+    suivisActifs.forEach(function(element) {
+      const suivi = element.suivi;
+      const index = element.index;
+      const dateSuivi = new Date(suivi.date + 'T00:00:00');
+
+      const fiche = document.createElement('div');
+      fiche.className = 'suivi';
+
+      if (dateSuivi < aujourdHui) {
+        fiche.classList.add('suivi-retard');
+      } else if (dateSuivi.getTime() === aujourdHui.getTime()) {
+        fiche.classList.add('suivi-aujourdhui');
+      } else {
+        fiche.classList.add('suivi-futur');
+      }
+
+      const titre = document.createElement('strong');
+      titre.textContent = suivi.contactNom;
+
+      const informations = document.createElement('p');
+      informations.innerText =
+        'Date : ' + formaterDate(suivi.date) + '\n' +
+        'Heure : ' + (suivi.heure || 'Non indiquée') + '\n' +
+        'Type : ' + suivi.type + '\n' +
+        'Note : ' + suivi.note;
+
+      const boutonComplete = document.createElement('button');
+      boutonComplete.type = 'button';
+      boutonComplete.textContent = 'Marquer comme terminé';
+      boutonComplete.onclick = function() {
+        terminerSuivi(index);
+      };
+
+      const boutonSupprimer = document.createElement('button');
+      boutonSupprimer.type = 'button';
+      boutonSupprimer.textContent = 'Supprimer';
+      boutonSupprimer.className = 'bouton-supprimer';
+      boutonSupprimer.onclick = function() {
+        supprimerSuivi(index);
+      };
+
+      fiche.appendChild(titre);
+      fiche.appendChild(informations);
+      fiche.appendChild(boutonComplete);
+      fiche.appendChild(boutonSupprimer);
+
+      liste.appendChild(fiche);
+    });
+  }
+
+  function terminerSuivi(index) {
+    const suivis = obtenirSuivis();
+    suivis[index].complete = true;
+    sauvegarderSuivis(suivis);
+    afficherSuivis();
+  }
+
+  function supprimerSuivi(index) {
+    const confirmation = confirm(
+      'Voulez-vous vraiment supprimer ce suivi ?'
+    );
+
+    if (!confirmation) {
+      return;
+    }
+
+    const suivis = obtenirSuivis();
+    suivis.splice(index, 1);
+    sauvegarderSuivis(suivis);
+    afficherSuivis();
+  }
+
+  function formaterDate(dateTexte) {
+    const parties = dateTexte.split('-');
+    return parties[2] + '/' + parties[1] + '/' + parties[0];
   }
 </script>
 
