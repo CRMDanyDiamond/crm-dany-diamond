@@ -7,62 +7,132 @@
   <title>CRM Dany Diamond</title>
 
   <style>
+    :root {
+      --fonce: #1f2937;
+      --fonce-clair: #374151;
+      --gris: #f3f4f6;
+      --gris-clair: #f9fafb;
+      --bordure: #d1d5db;
+      --vert: #15803d;
+      --vert-clair: #dcfce7;
+      --rouge: #b91c1c;
+      --rouge-fonce: #991b1b;
+      --orange: #d97706;
+      --bleu: #2563eb;
+      --blanc: #ffffff;
+    }
+
     * {
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
       margin: 0;
-      background: #f3f4f6;
-      color: #1f2937;
+      color: var(--fonce);
+      background: var(--gris);
     }
 
     header {
-      padding: 25px;
+      padding: 24px;
       text-align: center;
-      color: white;
-      background: #1f2937;
+      color: var(--blanc);
+      background: var(--fonce);
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    .avertissement {
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #7c2d12;
+      background: #ffedd5;
+      border-bottom: 1px solid #fdba74;
     }
 
     .container {
-      max-width: 1100px;
-      margin: 30px auto;
+      max-width: 1250px;
+      margin: 25px auto;
       padding: 20px;
     }
 
     .menu {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 14px;
     }
 
     .card {
-      padding: 25px 15px;
+      padding: 22px 14px;
       text-align: center;
-      background: white;
+      background: var(--blanc);
       border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.09);
       cursor: pointer;
+      transition: 0.2s;
     }
 
     .card:hover {
       transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.13);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .card p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     .section {
       display: none;
-      margin-top: 25px;
+      margin-top: 24px;
       padding: 25px;
-      background: white;
+      background: var(--blanc);
       border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.09);
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section h2 {
+      margin-top: 0;
+    }
+
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grille-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .pleine-largeur {
+      grid-column: 1 / -1;
     }
 
     label {
       display: block;
-      margin-top: 14px;
-      margin-bottom: 5px;
+      margin-top: 4px;
+      margin-bottom: 6px;
       font-weight: bold;
     }
 
@@ -71,67 +141,97 @@
     textarea {
       width: 100%;
       padding: 11px;
-      border: 1px solid #bbb;
+      color: var(--fonce);
+      background: var(--blanc);
+      border: 1px solid var(--bordure);
       border-radius: 6px;
     }
 
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 2px solid #93c5fd;
+      border-color: var(--bleu);
+    }
+
     textarea {
-      min-height: 90px;
+      min-height: 95px;
+      resize: vertical;
     }
 
     button {
       margin-top: 15px;
-      margin-right: 8px;
+      margin-right: 7px;
       padding: 11px 17px;
-      color: white;
-      background: #1f2937;
+      color: var(--blanc);
+      background: var(--fonce);
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
 
     button:hover {
-      background: #374151;
+      background: var(--fonce-clair);
     }
 
-    .bouton-supprimer {
-      background: #b91c1c;
-    }
-
-    .bouton-supprimer:hover {
-      background: #991b1b;
-    }
-
-    .bouton-annuler {
-      display: none;
+    .bouton-secondaire {
       background: #6b7280;
+    }
+
+    .bouton-vert {
+      background: var(--vert);
+    }
+
+    .bouton-rouge {
+      background: var(--rouge);
+    }
+
+    .bouton-rouge:hover {
+      background: var(--rouge-fonce);
+    }
+
+    .bouton-bleu {
+      background: var(--bleu);
     }
 
     .message {
       display: none;
-      margin-top: 15px;
+      margin-top: 16px;
       padding: 12px;
       color: #166534;
       font-weight: bold;
-      background: #dcfce7;
+      background: var(--vert-clair);
       border: 1px solid #22c55e;
       border-radius: 6px;
     }
 
+    .erreur {
+      color: #7f1d1d;
+      background: #fee2e2;
+      border-color: #ef4444;
+    }
+
     .recherche {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .recherche input {
       font-size: 16px;
-      border: 2px solid #1f2937;
+      border: 2px solid var(--fonce);
+    }
+
+    .filtres {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .fiche {
-      margin-bottom: 15px;
-      padding: 16px;
-      background: #fafafa;
-      border: 1px solid #ddd;
+      margin-bottom: 14px;
+      padding: 17px;
+      background: var(--gris-clair);
+      border: 1px solid #e5e7eb;
       border-radius: 8px;
     }
 
@@ -139,54 +239,163 @@
       font-size: 18px;
     }
 
+    .fiche p {
+      white-space: pre-line;
+      line-height: 1.5;
+    }
+
+    .ligne-titre {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 20px;
+      background: #e5e7eb;
+    }
+
+    .badge-vert {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .badge-orange {
+      color: #9a3412;
+      background: #ffedd5;
+    }
+
+    .badge-rouge {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
     .aucun-resultat {
       padding: 20px;
       text-align: center;
       color: #6b7280;
-      background: #f9fafb;
+      background: var(--gris-clair);
       border-radius: 8px;
     }
 
+    .statistiques {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 22px;
+    }
+
+    .statistique {
+      padding: 22px;
+      text-align: center;
+      background: var(--blanc);
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .statistique .nombre {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
     .suivi-retard {
-      border-left: 6px solid #b91c1c;
+      border-left: 6px solid var(--rouge);
     }
 
     .suivi-aujourdhui {
-      border-left: 6px solid #d97706;
+      border-left: 6px solid var(--orange);
     }
 
     .suivi-futur {
-      border-left: 6px solid #15803d;
+      border-left: 6px solid var(--vert);
     }
 
     .anniversaire-aujourdhui {
       background: #fff7ed;
-      border-left: 6px solid #d97706;
+      border-left: 6px solid var(--orange);
     }
 
     .anniversaire-demain {
       background: #eff6ff;
-      border-left: 6px solid #2563eb;
+      border-left: 6px solid var(--bleu);
     }
 
     .anniversaire-prochain {
-      border-left: 6px solid #15803d;
+      border-left: 6px solid var(--vert);
     }
 
     .apercu-enveloppe {
-      min-height: 220px;
+      min-height: 230px;
       margin-top: 20px;
       padding: 45px;
       font-size: 20px;
       line-height: 1.6;
-      background: white;
-      border: 2px solid #1f2937;
+      background: var(--blanc);
+      border: 2px solid var(--fonce);
+    }
+
+    .outils {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .outils button {
+      margin-right: 0;
     }
 
     footer {
-      padding: 25px;
+      padding: 30px;
       text-align: center;
-      color: #666;
+      color: #6b7280;
+    }
+
+    @media (max-width: 800px) {
+      .grille,
+      .grille-3,
+      .filtres,
+      .statistiques {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      .section {
+        padding: 18px;
+      }
+
+      .apercu-enveloppe {
+        padding: 25px;
+      }
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #apercuEnveloppe,
+      #apercuEnveloppe * {
+        visibility: visible;
+      }
+
+      #apercuEnveloppe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border: none;
+      }
     }
   </style>
 </head>
@@ -195,16 +404,26 @@
 
 <header>
   <h1>CRM immobilier Dany Diamond</h1>
-  <p>Gestion des prospects, contacts, suivis, anniversaires et enveloppes</p>
+  <p>Prospects, contacts, suivis, anniversaires et enveloppes</p>
 </header>
+
+<div class="avertissement">
+  Les données sont enregistrées dans ce navigateur. Utilisez régulièrement
+  la section Sauvegarde pour conserver une copie.
+</div>
 
 <div class="container">
 
   <div class="menu">
 
+    <div class="card" onclick="ouvrirSection('tableauBord')">
+      <h2>Tableau de bord</h2>
+      <p>Résumé du CRM et suivis importants.</p>
+    </div>
+
     <div class="card" onclick="ouvrirSection('prospects')">
       <h2>Prospects</h2>
-      <p>Ajouter ou modifier un prospect.</p>
+      <p>Ajouter ou modifier une personne.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('contacts')">
@@ -214,18 +433,59 @@
 
     <div class="card" onclick="ouvrirSection('suivis')">
       <h2>Suivis</h2>
-      <p>Gérer les appels, rendez-vous et rappels.</p>
+      <p>Appels, textos, courriels et rendez-vous.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('anniversaires')">
       <h2>Anniversaires</h2>
-      <p>Voir les anniversaires à venir.</p>
+      <p>Dates de naissance et âges.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('enveloppes')">
       <h2>Enveloppes</h2>
-      <p>Préparer et imprimer une enveloppe.</p>
+      <p>Une ou deux personnes à la même adresse.</p>
     </div>
+
+    <div class="card" onclick="ouvrirSection('sauvegarde')">
+      <h2>Sauvegarde</h2>
+      <p>Exporter ou importer toutes les données.</p>
+    </div>
+
+  </div>
+
+  <!-- TABLEAU DE BORD -->
+
+  <div id="tableauBord" class="section active">
+
+    <h2>Tableau de bord</h2>
+
+    <div class="statistiques">
+
+      <div class="statistique">
+        <span id="statContacts" class="nombre">0</span>
+        Contacts
+      </div>
+
+      <div class="statistique">
+        <span id="statSuivis" class="nombre">0</span>
+        Suivis à faire
+      </div>
+
+      <div class="statistique">
+        <span id="statRetards" class="nombre">0</span>
+        Suivis en retard
+      </div>
+
+      <div class="statistique">
+        <span id="statAnniversaires" class="nombre">0</span>
+        Anniversaires dans 30 jours
+      </div>
+
+    </div>
+
+    <h2 style="margin-top: 30px;">Suivis urgents</h2>
+
+    <div id="listeSuivisUrgents"></div>
 
   </div>
 
@@ -233,74 +493,148 @@
 
   <div id="prospects" class="section">
 
-    <h2 id="titreFormulaire">Ajouter un prospect</h2>
+    <h2 id="titreFormulaire">Ajouter un prospect ou un contact</h2>
 
-    <input id="indexModification" type="hidden">
+    <input id="idModification" type="hidden">
 
-    <label for="prenom">Prénom</label>
-    <input id="prenom" type="text">
+    <div class="grille">
 
-    <label for="nom">Nom</label>
-    <input id="nom" type="text">
+      <div>
+        <label for="prenom">Prénom *</label>
+        <input id="prenom" type="text">
+      </div>
 
-    <label for="telephone">Téléphone</label>
-    <input id="telephone" type="tel">
+      <div>
+        <label for="nom">Nom *</label>
+        <input id="nom" type="text">
+      </div>
 
-    <label for="courriel">Courriel</label>
-    <input id="courriel" type="email">
+      <div>
+        <label for="telephone">Téléphone principal</label>
+        <input id="telephone" type="tel" placeholder="819-000-0000">
+      </div>
 
-    <label for="adresse">Adresse complète</label>
-    <input
-      id="adresse"
-      type="text"
-      placeholder="Exemple : 123, rue Principale, Shawinigan, Québec, G9N 1A1"
-    >
+      <div>
+        <label for="telephone2">Deuxième téléphone</label>
+        <input id="telephone2" type="tel">
+      </div>
 
-    <label for="dateNaissance">Date de naissance</label>
-    <input id="dateNaissance" type="date">
+      <div>
+        <label for="courriel">Courriel</label>
+        <input id="courriel" type="email">
+      </div>
 
-    <label for="provenance">Provenance</label>
-    <select id="provenance">
-      <option>Facebook</option>
-      <option>Google</option>
-      <option>Référence</option>
-      <option>Soumissions Courtiers</option>
-      <option>Ami ou amie</option>
-      <option>Autre</option>
-    </select>
+      <div>
+        <label for="dateNaissance">Date de naissance</label>
+        <input id="dateNaissance" type="date">
+      </div>
 
-    <label for="typeProspect">Type de prospect</label>
-    <select id="typeProspect">
-      <option>Acheteur</option>
-      <option>Vendeur</option>
-      <option>Acheteur et vendeur</option>
-      <option>Courtier immobilier</option>
-      <option>Courtier hypothécaire</option>
-      <option>Inspecteur en bâtiment</option>
-      <option>Autre</option>
-    </select>
+      <div>
+        <label for="adresse">Adresse</label>
+        <input id="adresse" type="text" placeholder="123, rue Principale">
+      </div>
 
-    <label for="commentaires">Commentaires</label>
-    <textarea id="commentaires"></textarea>
+      <div>
+        <label for="ville">Ville</label>
+        <input id="ville" type="text">
+      </div>
+
+      <div>
+        <label for="province">Province</label>
+        <input id="province" type="text" value="Québec">
+      </div>
+
+      <div>
+        <label for="codePostal">Code postal</label>
+        <input id="codePostal" type="text" placeholder="G9A 1A1">
+      </div>
+
+      <div>
+        <label for="statut">Statut</label>
+        <select id="statut">
+          <option>Prospect</option>
+          <option>Client actif</option>
+          <option>Ancien client</option>
+          <option>Ami ou amie</option>
+          <option>Partenaire</option>
+          <option>À relancer</option>
+          <option>Inactif</option>
+          <option>Autre</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="typeContact">Type de contact</label>
+        <select id="typeContact">
+          <option>Acheteur</option>
+          <option>Vendeur</option>
+          <option>Acheteur et vendeur</option>
+          <option>Propriétaire</option>
+          <option>Locataire</option>
+          <option>Courtier immobilier</option>
+          <option>Courtier hypothécaire</option>
+          <option>Inspecteur en bâtiment</option>
+          <option>Notaire</option>
+          <option>Entrepreneur</option>
+          <option>Autre</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="provenance">Provenance</label>
+        <select id="provenance">
+          <option>Facebook</option>
+          <option>Google</option>
+          <option>Site Web</option>
+          <option>Référence</option>
+          <option>Soumissions Courtiers</option>
+          <option>Visite libre</option>
+          <option>Appel entrant</option>
+          <option>Ami ou amie</option>
+          <option>Ancien client</option>
+          <option>Autre</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="priorite">Priorité</label>
+        <select id="priorite">
+          <option>Normale</option>
+          <option>Haute</option>
+          <option>Urgente</option>
+          <option>Faible</option>
+        </select>
+      </div>
+
+      <div class="pleine-largeur">
+        <label for="commentaires">Commentaires</label>
+        <textarea
+          id="commentaires"
+          placeholder="Informations importantes concernant le contact"
+        ></textarea>
+      </div>
+
+    </div>
 
     <button
       id="boutonEnregistrer"
       type="button"
-      onclick="enregistrerProspect()"
+      onclick="enregistrerContact()"
     >
-      Enregistrer le prospect
+      Enregistrer le contact
     </button>
 
     <button
       id="boutonAnnuler"
-      class="bouton-annuler"
+      class="bouton-secondaire"
       type="button"
-      onclick="viderFormulaire()"
+      onclick="viderFormulaireContact()"
+      style="display:none;"
     >
       Annuler la modification
     </button>
 
-    <div id="messageProspect" class="message"></div>
+    <div id="messageContact" class="message"></div>
 
   </div>
 
@@ -310,20 +644,54 @@
 
     <h2>Contacts enregistrés</h2>
 
-    <div class="recherche">
+    <div class="filtres">
 
-      <label for="champRecherche">Rechercher un contact</label>
+      <div>
+        <label for="rechercheContact">Rechercher</label>
+        <input
+          id="rechercheContact"
+          type="search"
+          placeholder="Nom, téléphone, courriel, adresse, ville ou commentaire"
+          oninput="afficherContacts()"
+        >
+      </div>
 
-      <input
-        id="champRecherche"
-        type="search"
-        placeholder="Nom, téléphone, courriel, adresse, type ou provenance"
-        oninput="rechercherProspects()"
-      >
+      <div>
+        <label for="filtreStatut">Statut</label>
+        <select id="filtreStatut" onchange="afficherContacts()">
+          <option value="">Tous</option>
+          <option>Prospect</option>
+          <option>Client actif</option>
+          <option>Ancien client</option>
+          <option>Ami ou amie</option>
+          <option>Partenaire</option>
+          <option>À relancer</option>
+          <option>Inactif</option>
+          <option>Autre</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="filtreType">Type</label>
+        <select id="filtreType" onchange="afficherContacts()">
+          <option value="">Tous</option>
+          <option>Acheteur</option>
+          <option>Vendeur</option>
+          <option>Acheteur et vendeur</option>
+          <option>Propriétaire</option>
+          <option>Locataire</option>
+          <option>Courtier immobilier</option>
+          <option>Courtier hypothécaire</option>
+          <option>Inspecteur en bâtiment</option>
+          <option>Notaire</option>
+          <option>Entrepreneur</option>
+          <option>Autre</option>
+        </select>
+      </div>
 
     </div>
 
-    <div id="listeProspects"></div>
+    <div id="listeContacts"></div>
 
   </div>
 
@@ -333,34 +701,83 @@
 
     <h2>Ajouter un suivi</h2>
 
-    <label for="contactSuivi">Contact</label>
-    <select id="contactSuivi"></select>
+    <input id="idSuiviModification" type="hidden">
 
-    <label for="dateSuivi">Date du suivi</label>
-    <input id="dateSuivi" type="date">
+    <div class="grille">
 
-    <label for="heureSuivi">Heure</label>
-    <input id="heureSuivi" type="time">
+      <div>
+        <label for="contactSuivi">Contact *</label>
+        <select id="contactSuivi"></select>
+      </div>
 
-    <label for="typeSuivi">Type de suivi</label>
-    <select id="typeSuivi">
-      <option>Appel téléphonique</option>
-      <option>Courriel</option>
-      <option>Texto</option>
-      <option>Rendez-vous</option>
-      <option>Visite</option>
-      <option>Relance</option>
-      <option>Autre</option>
-    </select>
+      <div>
+        <label for="typeSuivi">Type de suivi</label>
+        <select id="typeSuivi">
+          <option>Appel téléphonique</option>
+          <option>Courriel</option>
+          <option>Texto</option>
+          <option>Rendez-vous</option>
+          <option>Visite</option>
+          <option>Relance</option>
+          <option>Envoi de documents</option>
+          <option>Autre</option>
+        </select>
+      </div>
 
-    <label for="noteSuivi">Note</label>
-    <textarea
-      id="noteSuivi"
-      placeholder="Exemple : rappeler le client pour discuter de son projet"
-    ></textarea>
+      <div>
+        <label for="dateSuivi">Date *</label>
+        <input id="dateSuivi" type="date">
+      </div>
 
-    <button type="button" onclick="enregistrerSuivi()">
+      <div>
+        <label for="heureSuivi">Heure</label>
+        <input id="heureSuivi" type="time">
+      </div>
+
+      <div>
+        <label for="prioriteSuivi">Priorité</label>
+        <select id="prioriteSuivi">
+          <option>Normale</option>
+          <option>Haute</option>
+          <option>Urgente</option>
+          <option>Faible</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="statutSuivi">État</label>
+        <select id="statutSuivi">
+          <option>À faire</option>
+          <option>En attente</option>
+        </select>
+      </div>
+
+      <div class="pleine-largeur">
+        <label for="noteSuivi">Note *</label>
+        <textarea
+          id="noteSuivi"
+          placeholder="Exemple : rappeler pour discuter de l’estimation"
+        ></textarea>
+      </div>
+
+    </div>
+
+    <button
+      id="boutonEnregistrerSuivi"
+      type="button"
+      onclick="enregistrerSuivi()"
+    >
       Enregistrer le suivi
+    </button>
+
+    <button
+      id="boutonAnnulerSuivi"
+      class="bouton-secondaire"
+      type="button"
+      onclick="viderFormulaireSuivi()"
+      style="display:none;"
+    >
+      Annuler la modification
     </button>
 
     <div id="messageSuivi" class="message"></div>
@@ -378,11 +795,10 @@
     <h2>Anniversaires à venir</h2>
 
     <p>
-      L’âge indiqué correspond à l’âge que le contact aura à son prochain
-      anniversaire.
+      Les anniversaires sont classés selon la prochaine date à venir.
     </p>
 
-    <div id="listeAnniversaires" style="margin-top: 20px;"></div>
+    <div id="listeAnniversaires"></div>
 
   </div>
 
@@ -392,14 +808,46 @@
 
     <h2>Préparer une enveloppe</h2>
 
-    <label for="contactEnveloppe">Choisir un contact</label>
+    <div class="grille">
 
-    <select id="contactEnveloppe" onchange="voirEnveloppe()">
-      <option value="">Choisir un contact</option>
-    </select>
+      <div>
+        <label for="contactEnveloppe1">Premier contact *</label>
+        <select
+          id="contactEnveloppe1"
+          onchange="actualiserEnveloppe()"
+        ></select>
+      </div>
+
+      <div>
+        <label for="contactEnveloppe2">
+          Deuxième contact à la même adresse
+        </label>
+
+        <select
+          id="contactEnveloppe2"
+          onchange="actualiserEnveloppe()"
+        ></select>
+      </div>
+
+      <div class="pleine-largeur">
+        <label for="nomFamilleEnveloppe">
+          Texte personnalisé facultatif
+        </label>
+
+        <input
+          id="nomFamilleEnveloppe"
+          type="text"
+          placeholder="Exemple : M. et Mme Tremblay"
+          oninput="actualiserEnveloppe()"
+        >
+      </div>
+
+    </div>
+
+    <div id="avertissementAdresse" class="message erreur"></div>
 
     <div id="apercuEnveloppe" class="apercu-enveloppe">
-      Le nom et l’adresse apparaîtront ici.
+      Choisissez un contact pour préparer l’enveloppe.
     </div>
 
     <button type="button" onclick="imprimerEnveloppe()">
@@ -408,49 +856,158 @@
 
   </div>
 
+  <!-- SAUVEGARDE -->
+
+  <div id="sauvegarde" class="section">
+
+    <h2>Sauvegarde des données</h2>
+
+    <p>
+      Exportez régulièrement une copie de vos contacts et suivis.
+      Cette copie pourra être réimportée plus tard.
+    </p>
+
+    <div class="outils">
+
+      <button
+        type="button"
+        class="bouton-vert"
+        onclick="exporterSauvegarde()"
+      >
+        Exporter une sauvegarde
+      </button>
+
+      <button
+        type="button"
+        class="bouton-bleu"
+        onclick="document.getElementById('fichierImportation').click()"
+      >
+        Importer une sauvegarde
+      </button>
+
+      <input
+        id="fichierImportation"
+        type="file"
+        accept=".json"
+        onchange="importerSauvegarde(event)"
+        style="display:none;"
+      >
+
+    </div>
+
+    <hr style="margin:30px 0;">
+
+    <h3>Zone dangereuse</h3>
+
+    <p>
+      Cette option efface tous les contacts et suivis enregistrés dans
+      ce navigateur.
+    </p>
+
+    <button
+      type="button"
+      class="bouton-rouge"
+      onclick="effacerToutesLesDonnees()"
+    >
+      Effacer toutes les données
+    </button>
+
+    <div id="messageSauvegarde" class="message"></div>
+
+  </div>
+
 </div>
 
 <footer>
-  Dany Diamond — Courtier immobilier agréé DA
+  Dany Diamond — Courtier immobilier agréé DA<br>
+  Résidentiel et commercial — 819-247-4777
 </footer>
 
 <script>
-  function obtenirProspects() {
-    return JSON.parse(
-      localStorage.getItem('prospectsDanyDiamond')
-    ) || [];
+  const CLE_CONTACTS = 'prospectsDanyDiamond';
+  const CLE_SUIVIS = 'suivisDanyDiamond';
+
+  function creerId() {
+    return (
+      Date.now().toString(36) +
+      Math.random().toString(36).substring(2, 8)
+    );
   }
 
-  function sauvegarderProspects(prospects) {
+  function obtenirContacts() {
+    const contacts =
+      JSON.parse(localStorage.getItem(CLE_CONTACTS)) || [];
+
+    let modificationNecessaire = false;
+
+    contacts.forEach(function(contact) {
+      if (!contact.id) {
+        contact.id = creerId();
+        modificationNecessaire = true;
+      }
+    });
+
+    if (modificationNecessaire) {
+      sauvegarderContacts(contacts);
+    }
+
+    return contacts;
+  }
+
+  function sauvegarderContacts(contacts) {
     localStorage.setItem(
-      'prospectsDanyDiamond',
-      JSON.stringify(prospects)
+      CLE_CONTACTS,
+      JSON.stringify(contacts)
     );
   }
 
   function obtenirSuivis() {
-    return JSON.parse(
-      localStorage.getItem('suivisDanyDiamond')
-    ) || [];
+    const suivis =
+      JSON.parse(localStorage.getItem(CLE_SUIVIS)) || [];
+
+    let modificationNecessaire = false;
+
+    suivis.forEach(function(suivi) {
+      if (!suivi.id) {
+        suivi.id = creerId();
+        modificationNecessaire = true;
+      }
+
+      if (suivi.termine === undefined) {
+        suivi.termine = Boolean(suivi.complete);
+        modificationNecessaire = true;
+      }
+    });
+
+    if (modificationNecessaire) {
+      sauvegarderSuivis(suivis);
+    }
+
+    return suivis;
   }
 
   function sauvegarderSuivis(suivis) {
     localStorage.setItem(
-      'suivisDanyDiamond',
+      CLE_SUIVIS,
       JSON.stringify(suivis)
     );
   }
 
   function ouvrirSection(id) {
-    document.querySelectorAll('.section').forEach(function(section) {
-      section.style.display = 'none';
-    });
+    document.querySelectorAll('.section').forEach(
+      function(section) {
+        section.classList.remove('active');
+      }
+    );
 
-    document.getElementById(id).style.display = 'block';
+    document.getElementById(id).classList.add('active');
+
+    if (id === 'tableauBord') {
+      actualiserTableauBord();
+    }
 
     if (id === 'contacts') {
-      document.getElementById('champRecherche').value = '';
-      afficherProspects();
+      afficherContacts();
     }
 
     if (id === 'suivis') {
@@ -463,236 +1020,266 @@
     }
 
     if (id === 'enveloppes') {
-      remplirContactsEnveloppe();
-      voirEnveloppe();
+      remplirContactsEnveloppes();
+      actualiserEnveloppe();
     }
+
+    window.scrollTo({
+      top: document.querySelector('.container').offsetTop,
+      behavior: 'smooth'
+    });
   }
 
-  function afficherMessage(id, texte) {
-    const message = document.getElementById(id);
+  function afficherMessage(id, texte, estErreur) {
+    const zone = document.getElementById(id);
 
-    message.textContent = texte;
-    message.style.display = 'block';
+    zone.textContent = texte;
+    zone.style.display = 'block';
+    zone.classList.toggle('erreur', Boolean(estErreur));
 
     setTimeout(function() {
-      message.style.display = 'none';
-    }, 3000);
+      zone.style.display = 'none';
+    }, 3500);
   }
 
-  function enregistrerProspect() {
-    const prenom = document.getElementById('prenom').value.trim();
-    const nom = document.getElementById('nom').value.trim();
-    const indexModification =
-      document.getElementById('indexModification').value;
+  function obtenirAdresseComplete(contact) {
+    return [
+      contact.adresse,
+      contact.ville,
+      contact.province,
+      contact.codePostal
+    ]
+      .filter(Boolean)
+      .join(', ');
+  }
 
-    if (prenom === '' || nom === '') {
+  function normaliserTexte(texte) {
+    return (texte || '')
+      .toString()
+      .trim()
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function echapperTexte(texte) {
+    const element = document.createElement('div');
+    element.textContent = texte || '';
+    return element.innerHTML;
+  }
+
+  function enregistrerContact() {
+    const prenom =
+      document.getElementById('prenom').value.trim();
+
+    const nom =
+      document.getElementById('nom').value.trim();
+
+    if (!prenom || !nom) {
       alert('Veuillez inscrire le prénom et le nom.');
       return;
     }
 
-    const prospect = {
+    const idModification =
+      document.getElementById('idModification').value;
+
+    const contacts = obtenirContacts();
+
+    const ancienContact = contacts.find(
+      function(contact) {
+        return contact.id === idModification;
+      }
+    );
+
+    const contact = {
+      id: idModification || creerId(),
       prenom: prenom,
       nom: nom,
-      telephone: document.getElementById('telephone').value.trim(),
-      courriel: document.getElementById('courriel').value.trim(),
-      adresse: document.getElementById('adresse').value.trim(),
-      dateNaissance: document.getElementById('dateNaissance').value,
-      provenance: document.getElementById('provenance').value,
-      type: document.getElementById('typeProspect').value,
-      commentaires: document.getElementById('commentaires').value.trim()
+      telephone:
+        document.getElementById('telephone').value.trim(),
+      telephone2:
+        document.getElementById('telephone2').value.trim(),
+      courriel:
+        document.getElementById('courriel').value.trim(),
+      dateNaissance:
+        document.getElementById('dateNaissance').value,
+      adresse:
+        document.getElementById('adresse').value.trim(),
+      ville:
+        document.getElementById('ville').value.trim(),
+      province:
+        document.getElementById('province').value.trim(),
+      codePostal:
+        document.getElementById('codePostal').value
+          .trim()
+          .toUpperCase(),
+      statut:
+        document.getElementById('statut').value,
+      type:
+        document.getElementById('typeContact').value,
+      provenance:
+        document.getElementById('provenance').value,
+      priorite:
+        document.getElementById('priorite').value,
+      commentaires:
+        document.getElementById('commentaires').value.trim(),
+      dateCreation:
+        ancienContact && ancienContact.dateCreation
+          ? ancienContact.dateCreation
+          : new Date().toISOString()
     };
 
-    const prospects = obtenirProspects();
+    const index = contacts.findIndex(
+      function(element) {
+        return element.id === contact.id;
+      }
+    );
 
-    if (indexModification === '') {
-      prospects.push(prospect);
+    if (index === -1) {
+      contacts.push(contact);
 
       afficherMessage(
-        'messageProspect',
-        'Le prospect a été enregistré avec succès.'
+        'messageContact',
+        'Le contact a été enregistré avec succès.'
       );
     } else {
-      prospects[Number(indexModification)] = prospect;
+      contacts[index] = contact;
 
       afficherMessage(
-        'messageProspect',
+        'messageContact',
         'Le contact a été modifié avec succès.'
       );
     }
 
-    sauvegarderProspects(prospects);
-    viderFormulaire();
+    contacts.sort(function(a, b) {
+      return (a.nom + a.prenom).localeCompare(
+        b.nom + b.prenom,
+        'fr'
+      );
+    });
+
+    sauvegarderContacts(contacts);
+    viderFormulaireContact();
+    actualiserTableauBord();
   }
 
-  function viderFormulaire() {
+  function viderFormulaireContact() {
+    document.getElementById('idModification').value = '';
     document.getElementById('prenom').value = '';
     document.getElementById('nom').value = '';
     document.getElementById('telephone').value = '';
+    document.getElementById('telephone2').value = '';
     document.getElementById('courriel').value = '';
-    document.getElementById('adresse').value = '';
     document.getElementById('dateNaissance').value = '';
+    document.getElementById('adresse').value = '';
+    document.getElementById('ville').value = '';
+    document.getElementById('province').value = 'Québec';
+    document.getElementById('codePostal').value = '';
+    document.getElementById('statut').selectedIndex = 0;
+    document.getElementById('typeContact').selectedIndex = 0;
     document.getElementById('provenance').selectedIndex = 0;
-    document.getElementById('typeProspect').selectedIndex = 0;
+    document.getElementById('priorite').selectedIndex = 0;
     document.getElementById('commentaires').value = '';
-    document.getElementById('indexModification').value = '';
 
     document.getElementById('titreFormulaire').textContent =
-      'Ajouter un prospect';
+      'Ajouter un prospect ou un contact';
 
     document.getElementById('boutonEnregistrer').textContent =
-      'Enregistrer le prospect';
+      'Enregistrer le contact';
 
-    document.getElementById('boutonAnnuler').style.display = 'none';
+    document.getElementById('boutonAnnuler').style.display =
+      'none';
   }
 
-  function afficherProspects(resultats) {
-    const liste = document.getElementById('listeProspects');
-
-    const elements = resultats || obtenirProspects().map(
-      function(prospect, index) {
-        return {
-          prospect: prospect,
-          index: index
-        };
+  function modifierContact(id) {
+    const contact = obtenirContacts().find(
+      function(element) {
+        return element.id === id;
       }
     );
 
-    liste.innerHTML = '';
-
-    if (elements.length === 0) {
-      liste.innerHTML =
-        '<div class="aucun-resultat">Aucun contact trouvé.</div>';
-
+    if (!contact) {
       return;
     }
 
-    elements.forEach(function(element) {
-      const prospect = element.prospect;
-      const index = element.index;
+    document.getElementById('idModification').value =
+      contact.id;
 
-      const fiche = document.createElement('div');
-      fiche.className = 'fiche';
+    document.getElementById('prenom').value =
+      contact.prenom || '';
 
-      const nomComplet = document.createElement('strong');
-      nomComplet.textContent = prospect.prenom + ' ' + prospect.nom;
+    document.getElementById('nom').value =
+      contact.nom || '';
 
-      const informations = document.createElement('p');
+    document.getElementById('telephone').value =
+      contact.telephone || '';
 
-      let naissance = 'Non indiquée';
-      let age = 'Non calculé';
+    document.getElementById('telephone2').value =
+      contact.telephone2 || '';
 
-      if (prospect.dateNaissance) {
-        naissance = formaterDate(prospect.dateNaissance);
-        age = calculerAgeActuel(prospect.dateNaissance) + ' ans';
-      }
+    document.getElementById('courriel').value =
+      contact.courriel || '';
 
-      informations.innerText =
-        'Téléphone : ' + (prospect.telephone || 'Non indiqué') + '\n' +
-        'Courriel : ' + (prospect.courriel || 'Non indiqué') + '\n' +
-        'Adresse : ' + (prospect.adresse || 'Non indiquée') + '\n' +
-        'Date de naissance : ' + naissance + '\n' +
-        'Âge actuel : ' + age + '\n' +
-        'Type : ' + (prospect.type || 'Non indiqué') + '\n' +
-        'Provenance : ' + (prospect.provenance || 'Non indiquée') + '\n' +
-        'Commentaires : ' + (prospect.commentaires || 'Aucun');
-
-      const boutonModifier = document.createElement('button');
-      boutonModifier.type = 'button';
-      boutonModifier.textContent = 'Modifier';
-
-      boutonModifier.onclick = function() {
-        modifierProspect(index);
-      };
-
-      const boutonSupprimer = document.createElement('button');
-      boutonSupprimer.type = 'button';
-      boutonSupprimer.textContent = 'Supprimer';
-      boutonSupprimer.className = 'bouton-supprimer';
-
-      boutonSupprimer.onclick = function() {
-        supprimerProspect(index);
-      };
-
-      fiche.appendChild(nomComplet);
-      fiche.appendChild(informations);
-      fiche.appendChild(boutonModifier);
-      fiche.appendChild(boutonSupprimer);
-
-      liste.appendChild(fiche);
-    });
-  }
-
-  function rechercherProspects() {
-    const recherche =
-      document.getElementById('champRecherche').value
-        .trim()
-        .toLowerCase();
-
-    const prospects = obtenirProspects();
-
-    const resultats = prospects
-      .map(function(prospect, index) {
-        return {
-          prospect: prospect,
-          index: index
-        };
-      })
-      .filter(function(element) {
-        const prospect = element.prospect;
-
-        const texte =
-          (prospect.prenom || '') + ' ' +
-          (prospect.nom || '') + ' ' +
-          (prospect.telephone || '') + ' ' +
-          (prospect.courriel || '') + ' ' +
-          (prospect.adresse || '') + ' ' +
-          (prospect.provenance || '') + ' ' +
-          (prospect.type || '') + ' ' +
-          (prospect.commentaires || '');
-
-        return texte.toLowerCase().includes(recherche);
-      });
-
-    afficherProspects(resultats);
-  }
-
-  function modifierProspect(index) {
-    const prospect = obtenirProspects()[index];
-
-    document.getElementById('prenom').value = prospect.prenom || '';
-    document.getElementById('nom').value = prospect.nom || '';
-    document.getElementById('telephone').value = prospect.telephone || '';
-    document.getElementById('courriel').value = prospect.courriel || '';
-    document.getElementById('adresse').value = prospect.adresse || '';
     document.getElementById('dateNaissance').value =
-      prospect.dateNaissance || '';
-    document.getElementById('provenance').value =
-      prospect.provenance || 'Facebook';
-    document.getElementById('typeProspect').value =
-      prospect.type || 'Acheteur';
-    document.getElementById('commentaires').value =
-      prospect.commentaires || '';
+      contact.dateNaissance || '';
 
-    document.getElementById('indexModification').value = index;
+    document.getElementById('adresse').value =
+      contact.adresse || '';
+
+    document.getElementById('ville').value =
+      contact.ville || '';
+
+    document.getElementById('province').value =
+      contact.province || 'Québec';
+
+    document.getElementById('codePostal').value =
+      contact.codePostal || '';
+
+    document.getElementById('statut').value =
+      contact.statut || 'Prospect';
+
+    document.getElementById('typeContact').value =
+      contact.type || 'Acheteur';
+
+    document.getElementById('provenance').value =
+      contact.provenance || 'Facebook';
+
+    document.getElementById('priorite').value =
+      contact.priorite || 'Normale';
+
+    document.getElementById('commentaires').value =
+      contact.commentaires || '';
+
     document.getElementById('titreFormulaire').textContent =
       'Modifier le contact';
+
     document.getElementById('boutonEnregistrer').textContent =
       'Enregistrer les modifications';
+
     document.getElementById('boutonAnnuler').style.display =
       'inline-block';
 
     ouvrirSection('prospects');
   }
 
-  function supprimerProspect(index) {
-    const prospects = obtenirProspects();
-    const prospect = prospects[index];
+  function supprimerContact(id) {
+    const contacts = obtenirContacts();
+
+    const contact = contacts.find(
+      function(element) {
+        return element.id === id;
+      }
+    );
+
+    if (!contact) {
+      return;
+    }
 
     const confirmation = confirm(
       'Voulez-vous vraiment supprimer ' +
-      prospect.prenom +
+      contact.prenom +
       ' ' +
-      prospect.nom +
+      contact.nom +
       ' ?'
     );
 
@@ -700,182 +1287,559 @@
       return;
     }
 
-    prospects.splice(index, 1);
-    sauvegarderProspects(prospects);
-    rechercherProspects();
-  }
-
-  function remplirListeContactsSuivi() {
-    const prospects = obtenirProspects();
-    const liste = document.getElementById('contactSuivi');
-
-    liste.innerHTML = '';
-
-    if (prospects.length === 0) {
-      liste.innerHTML =
-        '<option value="">Aucun contact enregistré</option>';
-
-      return;
-    }
-
-    prospects.forEach(function(prospect, index) {
-      const option = document.createElement('option');
-
-      option.value = index;
-      option.textContent = prospect.prenom + ' ' + prospect.nom;
-
-      liste.appendChild(option);
-    });
-  }
-
-  function enregistrerSuivi() {
-    const contactIndex =
-      document.getElementById('contactSuivi').value;
-
-    const date = document.getElementById('dateSuivi').value;
-    const heure = document.getElementById('heureSuivi').value;
-    const type = document.getElementById('typeSuivi').value;
-    const note = document.getElementById('noteSuivi').value.trim();
-
-    if (contactIndex === '') {
-      alert('Veuillez d’abord enregistrer un contact.');
-      return;
-    }
-
-    if (date === '') {
-      alert('Veuillez choisir une date de suivi.');
-      return;
-    }
-
-    if (note === '') {
-      alert('Veuillez inscrire une note.');
-      return;
-    }
-
-    const contact = obtenirProspects()[Number(contactIndex)];
-
-    const suivi = {
-      contactNom: contact.prenom + ' ' + contact.nom,
-      date: date,
-      heure: heure,
-      type: type,
-      note: note,
-      complete: false
-    };
-
-    const suivis = obtenirSuivis();
-
-    suivis.push(suivi);
-
-    suivis.sort(function(a, b) {
-      return (a.date + a.heure).localeCompare(b.date + b.heure);
-    });
-
-    sauvegarderSuivis(suivis);
-
-    document.getElementById('dateSuivi').value = '';
-    document.getElementById('heureSuivi').value = '';
-    document.getElementById('typeSuivi').selectedIndex = 0;
-    document.getElementById('noteSuivi').value = '';
-
-    afficherMessage(
-      'messageSuivi',
-      'Le suivi a été enregistré avec succès.'
+    const nouveauxContacts = contacts.filter(
+      function(element) {
+        return element.id !== id;
+      }
     );
 
-    afficherSuivis();
+    const nouveauxSuivis = obtenirSuivis().filter(
+      function(suivi) {
+        return suivi.contactId !== id;
+      }
+    );
+
+    sauvegarderContacts(nouveauxContacts);
+    sauvegarderSuivis(nouveauxSuivis);
+
+    afficherContacts();
+    actualiserTableauBord();
   }
 
-  function afficherSuivis() {
-    const suivis = obtenirSuivis();
-    const liste = document.getElementById('listeSuivis');
+  function afficherContacts() {
+    const recherche = normaliserTexte(
+      document.getElementById('rechercheContact').value
+    );
+
+    const statut =
+      document.getElementById('filtreStatut').value;
+
+    const type =
+      document.getElementById('filtreType').value;
+
+    const contacts = obtenirContacts().filter(
+      function(contact) {
+        const texte = normaliserTexte(
+          [
+            contact.prenom,
+            contact.nom,
+            contact.telephone,
+            contact.telephone2,
+            contact.courriel,
+            contact.adresse,
+            contact.ville,
+            contact.province,
+            contact.codePostal,
+            contact.statut,
+            contact.type,
+            contact.provenance,
+            contact.commentaires
+          ].join(' ')
+        );
+
+        const correspondRecherche =
+          !recherche || texte.includes(recherche);
+
+        const correspondStatut =
+          !statut || contact.statut === statut;
+
+        const correspondType =
+          !type || contact.type === type;
+
+        return (
+          correspondRecherche &&
+          correspondStatut &&
+          correspondType
+        );
+      }
+    );
+
+    const liste =
+      document.getElementById('listeContacts');
 
     liste.innerHTML = '';
 
-    const suivisActifs = suivis
-      .map(function(suivi, index) {
-        return {
-          suivi: suivi,
-          index: index
-        };
-      })
-      .filter(function(element) {
-        return !element.suivi.complete;
-      });
-
-    if (suivisActifs.length === 0) {
+    if (contacts.length === 0) {
       liste.innerHTML =
-        '<div class="aucun-resultat">Aucun suivi à faire.</div>';
+        '<div class="aucun-resultat">' +
+        'Aucun contact trouvé.' +
+        '</div>';
 
       return;
     }
 
-    const aujourdHui = new Date();
-    aujourdHui.setHours(0, 0, 0, 0);
-
-    suivisActifs.forEach(function(element) {
-      const suivi = element.suivi;
-      const index = element.index;
-      const dateSuivi = new Date(suivi.date + 'T00:00:00');
-
+    contacts.forEach(function(contact) {
       const fiche = document.createElement('div');
       fiche.className = 'fiche';
 
-      if (dateSuivi < aujourdHui) {
-        fiche.classList.add('suivi-retard');
-      } else if (dateSuivi.getTime() === aujourdHui.getTime()) {
-        fiche.classList.add('suivi-aujourdhui');
+      const titre = document.createElement('div');
+      titre.className = 'ligne-titre';
+
+      const nom = document.createElement('strong');
+
+      nom.textContent =
+        contact.prenom + ' ' + contact.nom;
+
+      const badges = document.createElement('div');
+
+      const badgeStatut = document.createElement('span');
+      badgeStatut.className = 'badge';
+      badgeStatut.textContent =
+        contact.statut || 'Sans statut';
+
+      if (contact.priorite === 'Urgente') {
+        badgeStatut.classList.add('badge-rouge');
+      } else if (contact.priorite === 'Haute') {
+        badgeStatut.classList.add('badge-orange');
       } else {
-        fiche.classList.add('suivi-futur');
+        badgeStatut.classList.add('badge-vert');
       }
 
-      const titre = document.createElement('strong');
-      titre.textContent = suivi.contactNom;
+      badges.appendChild(badgeStatut);
+
+      titre.appendChild(nom);
+      titre.appendChild(badges);
 
       const informations = document.createElement('p');
 
+      let naissance = 'Non indiquée';
+      let age = 'Non calculé';
+
+      if (contact.dateNaissance) {
+        naissance =
+          formaterDate(contact.dateNaissance);
+
+        age =
+          calculerAgeActuel(contact.dateNaissance) +
+          ' ans';
+      }
+
       informations.innerText =
-        'Date : ' + formaterDate(suivi.date) + '\n' +
-        'Heure : ' + (suivi.heure || 'Non indiquée') + '\n' +
-        'Type : ' + suivi.type + '\n' +
-        'Note : ' + suivi.note;
+        'Téléphone : ' +
+        (contact.telephone || 'Non indiqué') +
+        '\n' +
+        'Deuxième téléphone : ' +
+        (contact.telephone2 || 'Non indiqué') +
+        '\n' +
+        'Courriel : ' +
+        (contact.courriel || 'Non indiqué') +
+        '\n' +
+        'Adresse : ' +
+        (obtenirAdresseComplete(contact) ||
+          'Non indiquée') +
+        '\n' +
+        'Date de naissance : ' +
+        naissance +
+        '\n' +
+        'Âge actuel : ' +
+        age +
+        '\n' +
+        'Type : ' +
+        (contact.type || 'Non indiqué') +
+        '\n' +
+        'Provenance : ' +
+        (contact.provenance || 'Non indiquée') +
+        '\n' +
+        'Priorité : ' +
+        (contact.priorite || 'Normale') +
+        '\n' +
+        'Commentaires : ' +
+        (contact.commentaires || 'Aucun');
 
-      const boutonTerminer = document.createElement('button');
-      boutonTerminer.type = 'button';
-      boutonTerminer.textContent = 'Marquer comme terminé';
+      const boutonModifier =
+        document.createElement('button');
 
-      boutonTerminer.onclick = function() {
-        terminerSuivi(index);
+      boutonModifier.type = 'button';
+      boutonModifier.textContent = 'Modifier';
+
+      boutonModifier.onclick = function() {
+        modifierContact(contact.id);
       };
 
-      const boutonSupprimer = document.createElement('button');
+      const boutonSuivi =
+        document.createElement('button');
+
+      boutonSuivi.type = 'button';
+      boutonSuivi.textContent = 'Ajouter un suivi';
+      boutonSuivi.className = 'bouton-bleu';
+
+      boutonSuivi.onclick = function() {
+        ouvrirSection('suivis');
+        remplirListeContactsSuivi(contact.id);
+      };
+
+      const boutonSupprimer =
+        document.createElement('button');
+
       boutonSupprimer.type = 'button';
       boutonSupprimer.textContent = 'Supprimer';
-      boutonSupprimer.className = 'bouton-supprimer';
+      boutonSupprimer.className = 'bouton-rouge';
 
       boutonSupprimer.onclick = function() {
-        supprimerSuivi(index);
+        supprimerContact(contact.id);
       };
 
       fiche.appendChild(titre);
       fiche.appendChild(informations);
-      fiche.appendChild(boutonTerminer);
+      fiche.appendChild(boutonModifier);
+      fiche.appendChild(boutonSuivi);
       fiche.appendChild(boutonSupprimer);
 
       liste.appendChild(fiche);
     });
   }
 
-  function terminerSuivi(index) {
-    const suivis = obtenirSuivis();
+  function remplirListeContactsSuivi(contactSelectionne) {
+    const liste =
+      document.getElementById('contactSuivi');
 
-    suivis[index].complete = true;
+    const contacts = obtenirContacts();
 
-    sauvegarderSuivis(suivis);
-    afficherSuivis();
+    liste.innerHTML =
+      '<option value="">Choisir un contact</option>';
+
+    contacts.forEach(function(contact) {
+      const option = document.createElement('option');
+
+      option.value = contact.id;
+      option.textContent =
+        contact.prenom + ' ' + contact.nom;
+
+      if (contact.id === contactSelectionne) {
+        option.selected = true;
+      }
+
+      liste.appendChild(option);
+    });
   }
 
-  function supprimerSuivi(index) {
+  function enregistrerSuivi() {
+    const contactId =
+      document.getElementById('contactSuivi').value;
+
+    const date =
+      document.getElementById('dateSuivi').value;
+
+    const note =
+      document.getElementById('noteSuivi').value.trim();
+
+    if (!contactId) {
+      alert('Veuillez choisir un contact.');
+      return;
+    }
+
+    if (!date) {
+      alert('Veuillez choisir une date.');
+      return;
+    }
+
+    if (!note) {
+      alert('Veuillez inscrire une note.');
+      return;
+    }
+
+    const contact = obtenirContacts().find(
+      function(element) {
+        return element.id === contactId;
+      }
+    );
+
+    if (!contact) {
+      alert('Le contact sélectionné est introuvable.');
+      return;
+    }
+
+    const idModification =
+      document.getElementById(
+        'idSuiviModification'
+      ).value;
+
+    const suivis = obtenirSuivis();
+
+    const suivi = {
+      id: idModification || creerId(),
+      contactId: contactId,
+      contactNom:
+        contact.prenom + ' ' + contact.nom,
+      date: date,
+      heure:
+        document.getElementById('heureSuivi').value,
+      type:
+        document.getElementById('typeSuivi').value,
+      priorite:
+        document.getElementById('prioriteSuivi').value,
+      statut:
+        document.getElementById('statutSuivi').value,
+      note: note,
+      termine: false
+    };
+
+    const index = suivis.findIndex(
+      function(element) {
+        return element.id === suivi.id;
+      }
+    );
+
+    if (index === -1) {
+      suivis.push(suivi);
+
+      afficherMessage(
+        'messageSuivi',
+        'Le suivi a été enregistré avec succès.'
+      );
+    } else {
+      suivi.termine = suivis[index].termine;
+      suivis[index] = suivi;
+
+      afficherMessage(
+        'messageSuivi',
+        'Le suivi a été modifié avec succès.'
+      );
+    }
+
+    suivis.sort(function(a, b) {
+      return (
+        (a.date || '') +
+        (a.heure || '')
+      ).localeCompare(
+        (b.date || '') +
+        (b.heure || '')
+      );
+    });
+
+    sauvegarderSuivis(suivis);
+    viderFormulaireSuivi();
+    remplirListeContactsSuivi();
+    afficherSuivis();
+    actualiserTableauBord();
+  }
+
+  function viderFormulaireSuivi() {
+    document.getElementById(
+      'idSuiviModification'
+    ).value = '';
+
+    document.getElementById(
+      'contactSuivi'
+    ).selectedIndex = 0;
+
+    document.getElementById('dateSuivi').value = '';
+    document.getElementById('heureSuivi').value = '';
+    document.getElementById('typeSuivi').selectedIndex = 0;
+    document.getElementById(
+      'prioriteSuivi'
+    ).selectedIndex = 0;
+    document.getElementById(
+      'statutSuivi'
+    ).selectedIndex = 0;
+    document.getElementById('noteSuivi').value = '';
+
+    document.getElementById(
+      'boutonEnregistrerSuivi'
+    ).textContent = 'Enregistrer le suivi';
+
+    document.getElementById(
+      'boutonAnnulerSuivi'
+    ).style.display = 'none';
+  }
+
+  function modifierSuivi(id) {
+    const suivi = obtenirSuivis().find(
+      function(element) {
+        return element.id === id;
+      }
+    );
+
+    if (!suivi) {
+      return;
+    }
+
+    remplirListeContactsSuivi(suivi.contactId);
+
+    document.getElementById(
+      'idSuiviModification'
+    ).value = suivi.id;
+
+    document.getElementById('dateSuivi').value =
+      suivi.date || '';
+
+    document.getElementById('heureSuivi').value =
+      suivi.heure || '';
+
+    document.getElementById('typeSuivi').value =
+      suivi.type || 'Appel téléphonique';
+
+    document.getElementById('prioriteSuivi').value =
+      suivi.priorite || 'Normale';
+
+    document.getElementById('statutSuivi').value =
+      suivi.statut || 'À faire';
+
+    document.getElementById('noteSuivi').value =
+      suivi.note || '';
+
+    document.getElementById(
+      'boutonEnregistrerSuivi'
+    ).textContent = 'Enregistrer les modifications';
+
+    document.getElementById(
+      'boutonAnnulerSuivi'
+    ).style.display = 'inline-block';
+
+    window.scrollTo({
+      top: document.getElementById('suivis').offsetTop,
+      behavior: 'smooth'
+    });
+  }
+
+  function afficherSuivis() {
+    const liste =
+      document.getElementById('listeSuivis');
+
+    const suivis = obtenirSuivis().filter(
+      function(suivi) {
+        return !suivi.termine;
+      }
+    );
+
+    liste.innerHTML = '';
+
+    if (suivis.length === 0) {
+      liste.innerHTML =
+        '<div class="aucun-resultat">' +
+        'Aucun suivi à faire.' +
+        '</div>';
+
+      return;
+    }
+
+    const aujourdHui = nouvelleDateLocale();
+
+    suivis.forEach(function(suivi) {
+      const fiche = creerFicheSuivi(
+        suivi,
+        aujourdHui,
+        true
+      );
+
+      liste.appendChild(fiche);
+    });
+  }
+
+  function creerFicheSuivi(
+    suivi,
+    aujourdHui,
+    afficherTousBoutons
+  ) {
+    const dateSuivi =
+      new Date(suivi.date + 'T00:00:00');
+
+    const fiche = document.createElement('div');
+    fiche.className = 'fiche';
+
+    if (dateSuivi < aujourdHui) {
+      fiche.classList.add('suivi-retard');
+    } else if (
+      dateSuivi.getTime() === aujourdHui.getTime()
+    ) {
+      fiche.classList.add('suivi-aujourdhui');
+    } else {
+      fiche.classList.add('suivi-futur');
+    }
+
+    const titre = document.createElement('strong');
+
+    titre.textContent =
+      suivi.contactNom || 'Contact inconnu';
+
+    const informations = document.createElement('p');
+
+    informations.innerText =
+      'Date : ' +
+      formaterDate(suivi.date) +
+      '\n' +
+      'Heure : ' +
+      (suivi.heure || 'Non indiquée') +
+      '\n' +
+      'Type : ' +
+      (suivi.type || 'Non indiqué') +
+      '\n' +
+      'Priorité : ' +
+      (suivi.priorite || 'Normale') +
+      '\n' +
+      'État : ' +
+      (suivi.statut || 'À faire') +
+      '\n' +
+      'Note : ' +
+      (suivi.note || '');
+
+    fiche.appendChild(titre);
+    fiche.appendChild(informations);
+
+    if (afficherTousBoutons) {
+      const boutonTerminer =
+        document.createElement('button');
+
+      boutonTerminer.type = 'button';
+      boutonTerminer.textContent =
+        'Marquer comme terminé';
+
+      boutonTerminer.className = 'bouton-vert';
+
+      boutonTerminer.onclick = function() {
+        terminerSuivi(suivi.id);
+      };
+
+      const boutonModifier =
+        document.createElement('button');
+
+      boutonModifier.type = 'button';
+      boutonModifier.textContent = 'Modifier';
+
+      boutonModifier.onclick = function() {
+        modifierSuivi(suivi.id);
+      };
+
+      const boutonSupprimer =
+        document.createElement('button');
+
+      boutonSupprimer.type = 'button';
+      boutonSupprimer.textContent = 'Supprimer';
+      boutonSupprimer.className = 'bouton-rouge';
+
+      boutonSupprimer.onclick = function() {
+        supprimerSuivi(suivi.id);
+      };
+
+      fiche.appendChild(boutonTerminer);
+      fiche.appendChild(boutonModifier);
+      fiche.appendChild(boutonSupprimer);
+    }
+
+    return fiche;
+  }
+
+  function terminerSuivi(id) {
+    const suivis = obtenirSuivis();
+
+    const suivi = suivis.find(
+      function(element) {
+        return element.id === id;
+      }
+    );
+
+    if (!suivi) {
+      return;
+    }
+
+    suivi.termine = true;
+    sauvegarderSuivis(suivis);
+
+    afficherSuivis();
+    actualiserTableauBord();
+  }
+
+  function supprimerSuivi(id) {
     const confirmation = confirm(
       'Voulez-vous vraiment supprimer ce suivi ?'
     );
@@ -884,27 +1848,33 @@
       return;
     }
 
-    const suivis = obtenirSuivis();
-
-    suivis.splice(index, 1);
+    const suivis = obtenirSuivis().filter(
+      function(element) {
+        return element.id !== id;
+      }
+    );
 
     sauvegarderSuivis(suivis);
     afficherSuivis();
+    actualiserTableauBord();
   }
 
   function afficherAnniversaires() {
-    const liste = document.getElementById('listeAnniversaires');
+    const liste =
+      document.getElementById('listeAnniversaires');
 
-    const anniversaires = obtenirProspects()
-      .filter(function(prospect) {
-        return prospect.dateNaissance;
+    const anniversaires = obtenirContacts()
+      .filter(function(contact) {
+        return contact.dateNaissance;
       })
-      .map(function(prospect) {
+      .map(function(contact) {
         const prochain =
-          calculerProchainAnniversaire(prospect.dateNaissance);
+          calculerProchainAnniversaire(
+            contact.dateNaissance
+          );
 
         return {
-          prospect: prospect,
+          contact: contact,
           date: prochain.date,
           jours: prochain.jours,
           age: prochain.age
@@ -930,19 +1900,25 @@
       fiche.className = 'fiche';
 
       if (element.jours === 0) {
-        fiche.classList.add('anniversaire-aujourdhui');
+        fiche.classList.add(
+          'anniversaire-aujourdhui'
+        );
       } else if (element.jours === 1) {
-        fiche.classList.add('anniversaire-demain');
+        fiche.classList.add(
+          'anniversaire-demain'
+        );
       } else {
-        fiche.classList.add('anniversaire-prochain');
+        fiche.classList.add(
+          'anniversaire-prochain'
+        );
       }
 
       const titre = document.createElement('strong');
 
       titre.textContent =
-        element.prospect.prenom +
+        element.contact.prenom +
         ' ' +
-        element.prospect.nom;
+        element.contact.nom;
 
       const informations = document.createElement('p');
 
@@ -953,12 +1929,13 @@
       } else if (element.jours === 1) {
         messageJours = 'Anniversaire demain';
       } else {
-        messageJours = 'Dans ' + element.jours + ' jours';
+        messageJours =
+          'Dans ' + element.jours + ' jours';
       }
 
       informations.innerText =
         'Date de naissance : ' +
-        formaterDate(element.prospect.dateNaissance) +
+        formaterDate(element.contact.dateNaissance) +
         '\n' +
         'Prochain anniversaire : ' +
         element.date.toLocaleDateString('fr-CA') +
@@ -968,67 +1945,192 @@
         ' ans\n' +
         messageJours;
 
+      const boutonModifier =
+        document.createElement('button');
+
+      boutonModifier.type = 'button';
+      boutonModifier.textContent = 'Modifier le contact';
+
+      boutonModifier.onclick = function() {
+        modifierContact(element.contact.id);
+      };
+
       fiche.appendChild(titre);
       fiche.appendChild(informations);
+      fiche.appendChild(boutonModifier);
 
       liste.appendChild(fiche);
     });
   }
 
-  function remplirContactsEnveloppe() {
-    const contacts = obtenirProspects();
-    const liste = document.getElementById('contactEnveloppe');
+  function remplirContactsEnveloppes() {
+    const contacts = obtenirContacts();
 
-    liste.innerHTML =
+    const premier =
+      document.getElementById('contactEnveloppe1');
+
+    const deuxieme =
+      document.getElementById('contactEnveloppe2');
+
+    premier.innerHTML =
       '<option value="">Choisir un contact</option>';
 
-    contacts.forEach(function(contact, index) {
-      const option = document.createElement('option');
+    deuxieme.innerHTML =
+      '<option value="">Aucun deuxième contact</option>';
 
-      option.value = index;
-      option.textContent = contact.prenom + ' ' + contact.nom;
+    contacts.forEach(function(contact) {
+      const nom =
+        contact.prenom + ' ' + contact.nom;
 
-      liste.appendChild(option);
+      const option1 =
+        document.createElement('option');
+
+      option1.value = contact.id;
+      option1.textContent = nom;
+
+      const option2 =
+        document.createElement('option');
+
+      option2.value = contact.id;
+      option2.textContent = nom;
+
+      premier.appendChild(option1);
+      deuxieme.appendChild(option2);
     });
   }
 
-  function voirEnveloppe() {
-    const index =
-      document.getElementById('contactEnveloppe').value;
+  function actualiserEnveloppe() {
+    const id1 =
+      document.getElementById(
+        'contactEnveloppe1'
+      ).value;
+
+    const id2 =
+      document.getElementById(
+        'contactEnveloppe2'
+      ).value;
+
+    const textePersonnalise =
+      document.getElementById(
+        'nomFamilleEnveloppe'
+      ).value.trim();
 
     const apercu =
       document.getElementById('apercuEnveloppe');
 
-    if (index === '') {
+    const avertissement =
+      document.getElementById(
+        'avertissementAdresse'
+      );
+
+    avertissement.style.display = 'none';
+
+    if (!id1) {
       apercu.innerHTML =
-        'Le nom et l’adresse apparaîtront ici.';
+        'Choisissez un contact pour préparer l’enveloppe.';
+      return;
+    }
+
+    if (id1 === id2) {
+      document.getElementById(
+        'contactEnveloppe2'
+      ).value = '';
+
+      afficherMessage(
+        'avertissementAdresse',
+        'Veuillez choisir deux contacts différents.',
+        true
+      );
 
       return;
     }
 
-    const contact = obtenirProspects()[Number(index)];
+    const contacts = obtenirContacts();
+
+    const contact1 = contacts.find(
+      function(contact) {
+        return contact.id === id1;
+      }
+    );
+
+    const contact2 = contacts.find(
+      function(contact) {
+        return contact.id === id2;
+      }
+    );
+
+    if (!contact1) {
+      return;
+    }
+
+    const adresse1 =
+      obtenirAdresseComplete(contact1);
+
+    let noms;
+
+    if (textePersonnalise) {
+      noms = echapperTexte(textePersonnalise);
+    } else if (contact2) {
+      noms =
+        echapperTexte(
+          contact1.prenom + ' ' + contact1.nom
+        ) +
+        '<br>' +
+        echapperTexte(
+          contact2.prenom + ' ' + contact2.nom
+        );
+    } else {
+      noms = echapperTexte(
+        contact1.prenom + ' ' + contact1.nom
+      );
+    }
+
+    if (contact2) {
+      const adresse2 =
+        obtenirAdresseComplete(contact2);
+
+      if (
+        normaliserTexte(adresse1) !==
+        normaliserTexte(adresse2)
+      ) {
+        afficherMessage(
+          'avertissementAdresse',
+          'Attention : les deux contacts ne semblent pas avoir la même adresse. L’adresse du premier contact sera utilisée.',
+          true
+        );
+      }
+    }
 
     apercu.innerHTML =
       '<strong>' +
-      echapperTexte(contact.prenom + ' ' + contact.nom) +
+      noms +
       '</strong><br><br>' +
-      echapperTexte(contact.adresse || 'Adresse non indiquée');
+      echapperTexte(
+        adresse1 || 'Adresse non indiquée'
+      );
   }
 
   function imprimerEnveloppe() {
-    const index =
-      document.getElementById('contactEnveloppe').value;
+    const id1 =
+      document.getElementById(
+        'contactEnveloppe1'
+      ).value;
 
-    if (index === '') {
+    if (!id1) {
       alert('Veuillez choisir un contact.');
       return;
     }
 
     const contenu =
-      document.getElementById('apercuEnveloppe').innerHTML;
+      document.getElementById(
+        'apercuEnveloppe'
+      ).innerHTML;
 
-    const fenetre =
-      window.open('', '', 'width=950,height=550');
+    const fenetre = window.open(
+      '',
+      '',
+      'width=950,height=550'
+    );
 
     if (!fenetre) {
       alert(
@@ -1061,7 +2163,7 @@
 
           .adresse {
             position: absolute;
-            top: 1.45in;
+            top: 1.4in;
             left: 4.1in;
             font-size: 18px;
             line-height: 1.5;
@@ -1085,6 +2187,217 @@
     }, 500);
   }
 
+  function actualiserTableauBord() {
+    const contacts = obtenirContacts();
+
+    const suivisActifs = obtenirSuivis().filter(
+      function(suivi) {
+        return !suivi.termine;
+      }
+    );
+
+    const aujourdHui = nouvelleDateLocale();
+
+    const retards = suivisActifs.filter(
+      function(suivi) {
+        return (
+          new Date(suivi.date + 'T00:00:00') <
+          aujourdHui
+        );
+      }
+    );
+
+    const anniversairesProches =
+      contacts.filter(function(contact) {
+        if (!contact.dateNaissance) {
+          return false;
+        }
+
+        const prochain =
+          calculerProchainAnniversaire(
+            contact.dateNaissance
+          );
+
+        return prochain.jours <= 30;
+      });
+
+    document.getElementById(
+      'statContacts'
+    ).textContent = contacts.length;
+
+    document.getElementById(
+      'statSuivis'
+    ).textContent = suivisActifs.length;
+
+    document.getElementById(
+      'statRetards'
+    ).textContent = retards.length;
+
+    document.getElementById(
+      'statAnniversaires'
+    ).textContent = anniversairesProches.length;
+
+    const liste =
+      document.getElementById(
+        'listeSuivisUrgents'
+      );
+
+    liste.innerHTML = '';
+
+    const urgents = suivisActifs
+      .filter(function(suivi) {
+        const date =
+          new Date(suivi.date + 'T00:00:00');
+
+        const limite = new Date(aujourdHui);
+        limite.setDate(limite.getDate() + 7);
+
+        return date <= limite;
+      })
+      .slice(0, 10);
+
+    if (urgents.length === 0) {
+      liste.innerHTML =
+        '<div class="aucun-resultat">' +
+        'Aucun suivi urgent.' +
+        '</div>';
+
+      return;
+    }
+
+    urgents.forEach(function(suivi) {
+      liste.appendChild(
+        creerFicheSuivi(
+          suivi,
+          aujourdHui,
+          false
+        )
+      );
+    });
+  }
+
+  function exporterSauvegarde() {
+    const sauvegarde = {
+      version: 1,
+      dateExportation: new Date().toISOString(),
+      contacts: obtenirContacts(),
+      suivis: obtenirSuivis()
+    };
+
+    const contenu = JSON.stringify(
+      sauvegarde,
+      null,
+      2
+    );
+
+    const fichier = new Blob(
+      [contenu],
+      { type: 'application/json' }
+    );
+
+    const lien = document.createElement('a');
+
+    lien.href = URL.createObjectURL(fichier);
+
+    lien.download =
+      'sauvegarde-crm-dany-diamond-' +
+      new Date().toISOString().slice(0, 10) +
+      '.json';
+
+    document.body.appendChild(lien);
+    lien.click();
+    lien.remove();
+
+    URL.revokeObjectURL(lien.href);
+
+    afficherMessage(
+      'messageSauvegarde',
+      'La sauvegarde a été exportée.'
+    );
+  }
+
+  function importerSauvegarde(event) {
+    const fichier = event.target.files[0];
+
+    if (!fichier) {
+      return;
+    }
+
+    const lecteur = new FileReader();
+
+    lecteur.onload = function() {
+      try {
+        const donnees =
+          JSON.parse(lecteur.result);
+
+        if (
+          !Array.isArray(donnees.contacts) ||
+          !Array.isArray(donnees.suivis)
+        ) {
+          throw new Error('Format invalide');
+        }
+
+        const confirmation = confirm(
+          'Cette importation remplacera les données actuelles. Continuer ?'
+        );
+
+        if (!confirmation) {
+          return;
+        }
+
+        sauvegarderContacts(donnees.contacts);
+        sauvegarderSuivis(donnees.suivis);
+
+        afficherMessage(
+          'messageSauvegarde',
+          'La sauvegarde a été importée avec succès.'
+        );
+
+        actualiserTableauBord();
+      } catch (erreur) {
+        afficherMessage(
+          'messageSauvegarde',
+          'Le fichier sélectionné n’est pas une sauvegarde valide.',
+          true
+        );
+      }
+
+      event.target.value = '';
+    };
+
+    lecteur.readAsText(fichier);
+  }
+
+  function effacerToutesLesDonnees() {
+    const confirmation1 = confirm(
+      'Voulez-vous vraiment effacer tous les contacts et suivis ?'
+    );
+
+    if (!confirmation1) {
+      return;
+    }
+
+    const confirmation2 = confirm(
+      'Cette action est irréversible sans sauvegarde. Confirmez-vous encore ?'
+    );
+
+    if (!confirmation2) {
+      return;
+    }
+
+    localStorage.removeItem(CLE_CONTACTS);
+    localStorage.removeItem(CLE_SUIVIS);
+
+    viderFormulaireContact();
+    viderFormulaireSuivi();
+    actualiserTableauBord();
+
+    afficherMessage(
+      'messageSauvegarde',
+      'Toutes les données ont été effacées.'
+    );
+  }
+
   function calculerAgeActuel(dateNaissance) {
     const naissance =
       new Date(dateNaissance + 'T00:00:00');
@@ -1096,10 +2409,13 @@
       naissance.getFullYear();
 
     const anniversairePasse =
-      aujourdHui.getMonth() > naissance.getMonth() ||
+      aujourdHui.getMonth() >
+        naissance.getMonth() ||
       (
-        aujourdHui.getMonth() === naissance.getMonth() &&
-        aujourdHui.getDate() >= naissance.getDate()
+        aujourdHui.getMonth() ===
+          naissance.getMonth() &&
+        aujourdHui.getDate() >=
+          naissance.getDate()
       );
 
     if (!anniversairePasse) {
@@ -1109,34 +2425,32 @@
     return age;
   }
 
-  function calculerProchainAnniversaire(dateNaissance) {
+  function calculerProchainAnniversaire(
+    dateNaissance
+  ) {
     const naissance =
       new Date(dateNaissance + 'T00:00:00');
 
-    const aujourdHui = new Date();
-    aujourdHui.setHours(0, 0, 0, 0);
+    const aujourdHui = nouvelleDateLocale();
 
-    let prochain =
-      new Date(
-        aujourdHui.getFullYear(),
+    let prochain = new Date(
+      aujourdHui.getFullYear(),
+      naissance.getMonth(),
+      naissance.getDate()
+    );
+
+    if (prochain < aujourdHui) {
+      prochain = new Date(
+        aujourdHui.getFullYear() + 1,
         naissance.getMonth(),
         naissance.getDate()
       );
-
-    if (prochain < aujourdHui) {
-      prochain =
-        new Date(
-          aujourdHui.getFullYear() + 1,
-          naissance.getMonth(),
-          naissance.getDate()
-        );
     }
 
-    const jours =
-      Math.round(
-        (prochain - aujourdHui) /
-        (1000 * 60 * 60 * 24)
-      );
+    const jours = Math.round(
+      (prochain - aujourdHui) /
+      (1000 * 60 * 60 * 24)
+    );
 
     const age =
       prochain.getFullYear() -
@@ -1156,6 +2470,10 @@
 
     const parties = dateTexte.split('-');
 
+    if (parties.length !== 3) {
+      return dateTexte;
+    }
+
     return (
       parties[2] +
       '/' +
@@ -1165,11 +2483,18 @@
     );
   }
 
-  function echapperTexte(texte) {
-    const element = document.createElement('div');
-    element.textContent = texte;
-    return element.innerHTML;
+  function nouvelleDateLocale() {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
   }
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    function() {
+      actualiserTableauBord();
+    }
+  );
 </script>
 
 </body>
