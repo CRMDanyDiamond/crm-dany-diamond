@@ -8,14 +8,13 @@
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
     }
 
     body {
-      background: #f4f6f8;
-      color: #222;
+      margin: 0;
+      background: #f3f4f6;
+      color: #1f2937;
     }
 
     header {
@@ -23,10 +22,6 @@
       color: white;
       padding: 25px;
       text-align: center;
-    }
-
-    header h1 {
-      margin-bottom: 8px;
     }
 
     .container {
@@ -37,51 +32,35 @@
 
     .menu {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
     }
 
     .card {
       background: white;
-      padding: 28px 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+      padding: 25px 15px;
+      border-radius: 10px;
       text-align: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
-      transition: 0.2s;
     }
 
     .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    }
-
-    .card h2 {
-      margin-bottom: 10px;
-      color: #1f2937;
-    }
-
-    .card p {
-      color: #666;
-      line-height: 1.4;
+      transform: translateY(-3px);
     }
 
     .section {
       display: none;
+      margin-top: 25px;
       background: white;
-      margin-top: 30px;
       padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.10);
-    }
-
-    .section h2 {
-      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     }
 
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 14px;
       margin-bottom: 5px;
       font-weight: bold;
     }
@@ -91,12 +70,12 @@
     textarea {
       width: 100%;
       padding: 11px;
-      border: 1px solid #ccc;
+      border: 1px solid #bbb;
       border-radius: 6px;
     }
 
     textarea {
-      min-height: 100px;
+      min-height: 90px;
     }
 
     button {
@@ -111,6 +90,22 @@
 
     button:hover {
       background: #374151;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: #dcfce7;
+      border: 1px solid #22c55e;
+      border-radius: 6px;
+      color: #166534;
+      font-weight: bold;
+    }
+
+    .prospect {
+      border-bottom: 1px solid #ddd;
+      padding: 12px 0;
     }
 
     footer {
@@ -133,50 +128,50 @@
   <div class="menu">
     <div class="card" onclick="ouvrirSection('prospects')">
       <h2>Prospects</h2>
-      <p>Ajouter et consulter les prospects immobiliers.</p>
+      <p>Ajouter un nouveau prospect.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('contacts')">
       <h2>Contacts</h2>
-      <p>Gérer les coordonnées de vos clients et partenaires.</p>
+      <p>Voir les prospects enregistrés.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('suivis')">
       <h2>Suivis</h2>
-      <p>Voir les appels, rendez-vous et tâches à effectuer.</p>
+      <p>Gérer les appels et rendez-vous.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('anniversaires')">
       <h2>Anniversaires</h2>
-      <p>Consulter les anniversaires à venir.</p>
+      <p>Voir les anniversaires à venir.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('enveloppes')">
       <h2>Enveloppes</h2>
-      <p>Préparer les noms et adresses pour l’impression.</p>
+      <p>Préparer les adresses à imprimer.</p>
     </div>
   </div>
 
   <div id="prospects" class="section">
     <h2>Ajouter un prospect</h2>
 
-    <label>Prénom</label>
-    <input type="text" placeholder="Prénom">
+    <label for="prenom">Prénom</label>
+    <input id="prenom" type="text">
 
-    <label>Nom</label>
-    <input type="text" placeholder="Nom">
+    <label for="nom">Nom</label>
+    <input id="nom" type="text">
 
-    <label>Téléphone</label>
-    <input type="tel" placeholder="819-000-0000">
+    <label for="telephone">Téléphone</label>
+    <input id="telephone" type="tel">
 
-    <label>Courriel</label>
-    <input type="email" placeholder="exemple@gmail.com">
+    <label for="courriel">Courriel</label>
+    <input id="courriel" type="email">
 
-    <label>Adresse</label>
-    <input type="text" placeholder="Adresse complète">
+    <label for="adresse">Adresse</label>
+    <input id="adresse" type="text">
 
-    <label>Provenance du prospect</label>
-    <select>
+    <label for="provenance">Provenance</label>
+    <select id="provenance">
       <option>Facebook</option>
       <option>Google</option>
       <option>Référence</option>
@@ -185,8 +180,8 @@
       <option>Autre</option>
     </select>
 
-    <label>Type de prospect</label>
-    <select>
+    <label for="typeProspect">Type de prospect</label>
+    <select id="typeProspect">
       <option>Acheteur</option>
       <option>Vendeur</option>
       <option>Acheteur et vendeur</option>
@@ -196,30 +191,36 @@
       <option>Autre</option>
     </select>
 
-    <label>Commentaires</label>
-    <textarea placeholder="Notes concernant le prospect"></textarea>
+    <label for="commentaires">Commentaires</label>
+    <textarea id="commentaires"></textarea>
 
-    <button>Enregistrer le prospect</button>
+    <button type="button" onclick="enregistrerProspect()">
+      Enregistrer le prospect
+    </button>
+
+    <div id="messageSucces" class="message">
+      Le prospect a été enregistré avec succès.
+    </div>
   </div>
 
   <div id="contacts" class="section">
-    <h2>Contacts</h2>
-    <p>La liste complète des contacts sera ajoutée à cette section.</p>
+    <h2>Contacts enregistrés</h2>
+    <div id="listeProspects"></div>
   </div>
 
   <div id="suivis" class="section">
     <h2>Suivis</h2>
-    <p>Les tâches, rappels et dates de suivi seront affichés ici.</p>
+    <p>Cette section sera ajoutée prochainement.</p>
   </div>
 
   <div id="anniversaires" class="section">
     <h2>Anniversaires</h2>
-    <p>Les anniversaires à venir seront affichés ici.</p>
+    <p>Cette section sera ajoutée prochainement.</p>
   </div>
 
   <div id="enveloppes" class="section">
     <h2>Enveloppes</h2>
-    <p>Cette section servira à préparer les adresses pour l’impression.</p>
+    <p>Cette section sera ajoutée prochainement.</p>
   </div>
 
 </div>
@@ -230,60 +231,88 @@
 
 <script>
   function ouvrirSection(id) {
-    const sections = document.querySelectorAll('.section');
-
-    sections.forEach(section => {
+    document.querySelectorAll('.section').forEach(function(section) {
       section.style.display = 'none';
     });
 
     document.getElementById(id).style.display = 'block';
-    document.getElementById(id).scrollIntoView({
-      behavior: 'smooth'
+
+    if (id === 'contacts') {
+      afficherProspects();
+    }
+  }
+
+  function enregistrerProspect() {
+    const prenom = document.getElementById('prenom').value.trim();
+    const nom = document.getElementById('nom').value.trim();
+
+    if (prenom === '' || nom === '') {
+      alert('Veuillez inscrire le prénom et le nom.');
+      return;
+    }
+
+    const prospect = {
+      prenom: prenom,
+      nom: nom,
+      telephone: document.getElementById('telephone').value.trim(),
+      courriel: document.getElementById('courriel').value.trim(),
+      adresse: document.getElementById('adresse').value.trim(),
+      provenance: document.getElementById('provenance').value,
+      type: document.getElementById('typeProspect').value,
+      commentaires: document.getElementById('commentaires').value.trim()
+    };
+
+    const prospects =
+      JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
+
+    prospects.push(prospect);
+
+    localStorage.setItem(
+      'prospectsDanyDiamond',
+      JSON.stringify(prospects)
+    );
+
+    document.getElementById('messageSucces').style.display = 'block';
+
+    document.getElementById('prenom').value = '';
+    document.getElementById('nom').value = '';
+    document.getElementById('telephone').value = '';
+    document.getElementById('courriel').value = '';
+    document.getElementById('adresse').value = '';
+    document.getElementById('commentaires').value = '';
+
+    setTimeout(function() {
+      document.getElementById('messageSucces').style.display = 'none';
+    }, 3000);
+  }
+
+  function afficherProspects() {
+    const prospects =
+      JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
+
+    const liste = document.getElementById('listeProspects');
+
+    if (prospects.length === 0) {
+      liste.innerHTML = '<p>Aucun prospect enregistré.</p>';
+      return;
+    }
+
+    liste.innerHTML = '';
+
+    prospects.forEach(function(prospect) {
+      const fiche = document.createElement('div');
+      fiche.className = 'prospect';
+
+      fiche.innerHTML =
+        '<strong>' + prospect.prenom + ' ' + prospect.nom + '</strong><br>' +
+        'Téléphone : ' + (prospect.telephone || 'Non indiqué') + '<br>' +
+        'Courriel : ' + (prospect.courriel || 'Non indiqué') + '<br>' +
+        'Type : ' + prospect.type + '<br>' +
+        'Provenance : ' + prospect.provenance;
+
+      liste.appendChild(fiche);
     });
   }
-function enregistrerProspect() {
-  const section = document.getElementById('prospects');
-  const champs = section.querySelectorAll('input, select, textarea');
-
-  const prenom = champs[0].value.trim();
-  const nom = champs[1].value.trim();
-
-  if (!prenom || !nom) {
-    alert('Veuillez inscrire le prénom et le nom.');
-    return;
-  }
-
-  const prospect = {
-    prenom: prenom,
-    nom: nom,
-    telephone: champs[2].value,
-    courriel: champs[3].value,
-    adresse: champs[4].value,
-    provenance: champs[5].value,
-    type: champs[6].value,
-    commentaires: champs[7].value
-  };
-
-  const prospects =
-    JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
-
-  prospects.push(prospect);
-
-  localStorage.setItem(
-    'prospectsDanyDiamond',
-    JSON.stringify(prospects)
-  );
-
-  alert('Prospect enregistré avec succès.');
-
-  champs.forEach(champ => {
-    if (champ.tagName === 'SELECT') {
-      champ.selectedIndex = 0;
-    } else {
-      champ.value = '';
-    }
-  });
-}
 </script>
 
 </body>
