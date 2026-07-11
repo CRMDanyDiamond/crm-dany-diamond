@@ -79,8 +79,9 @@
     }
 
     button {
-      margin-top: 20px;
-      padding: 12px 20px;
+      margin-top: 15px;
+      margin-right: 8px;
+      padding: 11px 17px;
       background: #1f2937;
       color: white;
       border: none;
@@ -90,6 +91,19 @@
 
     button:hover {
       background: #374151;
+    }
+
+    .bouton-supprimer {
+      background: #b91c1c;
+    }
+
+    .bouton-supprimer:hover {
+      background: #991b1b;
+    }
+
+    .bouton-annuler {
+      display: none;
+      background: #6b7280;
     }
 
     .message {
@@ -104,8 +118,15 @@
     }
 
     .prospect {
-      border-bottom: 1px solid #ddd;
-      padding: 12px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 15px;
+      background: #fafafa;
+    }
+
+    .prospect strong {
+      font-size: 18px;
     }
 
     footer {
@@ -128,7 +149,7 @@
   <div class="menu">
     <div class="card" onclick="ouvrirSection('prospects')">
       <h2>Prospects</h2>
-      <p>Ajouter un nouveau prospect.</p>
+      <p>Ajouter ou modifier un prospect.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('contacts')">
@@ -153,7 +174,9 @@
   </div>
 
   <div id="prospects" class="section">
-    <h2>Ajouter un prospect</h2>
+    <h2 id="titreFormulaire">Ajouter un prospect</h2>
+
+    <input id="indexModification" type="hidden" value="">
 
     <label for="prenom">Prénom</label>
     <input id="prenom" type="text">
@@ -194,13 +217,20 @@
     <label for="commentaires">Commentaires</label>
     <textarea id="commentaires"></textarea>
 
-    <button type="button" onclick="enregistrerProspect()">
+    <button id="boutonEnregistrer" type="button" onclick="enregistrerProspect()">
       Enregistrer le prospect
     </button>
 
-    <div id="messageSucces" class="message">
-      Le prospect a été enregistré avec succès.
-    </div>
+    <button
+      id="boutonAnnuler"
+      class="bouton-annuler"
+      type="button"
+      onclick="annulerModification()"
+    >
+      Annuler la modification
+    </button>
+
+    <div id="messageSucces" class="message"></div>
   </div>
 
   <div id="contacts" class="section">
@@ -242,9 +272,22 @@
     }
   }
 
+  function obtenirProspects() {
+    return JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
+  }
+
+  function sauvegarderProspects(prospects) {
+    localStorage.setItem(
+      'prospectsDanyDiamond',
+      JSON.stringify(prospects)
+    );
+  }
+
   function enregistrerProspect() {
     const prenom = document.getElementById('prenom').value.trim();
     const nom = document.getElementById('nom').value.trim();
+    const indexModification =
+      document.getElementById('indexModification').value;
 
     if (prenom === '' || nom === '') {
       alert('Veuillez inscrire le prénom et le nom.');
@@ -262,56 +305,151 @@
       commentaires: document.getElementById('commentaires').value.trim()
     };
 
-    const prospects =
-      JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
+    const prospects = obtenirProspects();
 
-    prospects.push(prospect);
+    if (indexModification === '') {
+      prospects.push(prospect);
+      afficherMessage('Le prospect a été enregistré avec succès.');
+    } else {
+      prospects[Number(indexModification)] = prospect;
+      afficherMessage('Le contact a été modifié avec succès.');
+    }
 
-    localStorage.setItem(
-      'prospectsDanyDiamond',
-      JSON.stringify(prospects)
+    sauvegarderProspects(prospects);
+    viderFormulaire();
+  }
+
+  function afficherProspects() {
+    const prospects = obtenirProspects();
+    const liste = document.getElementById('listeProspects');
+
+    liste.innerHTML = '';
+
+    if (prospects.length === 0) {
+      liste.textContent = 'Aucun prospect enregistré.';
+      return;
+    }
+
+    prospects.forEach(function(prospect, index) {
+      const fiche = document.createElement('div');
+      fiche.className = 'prospect';
+
+      const nomComplet = document.createElement('strong');
+      nomComplet.textContent = prospect.prenom + ' ' + prospect.nom;
+
+      const informations = document.createElement('p');
+      informations.innerText =
+        'Téléphone : ' + (prospect.telephone || 'Non indiqué') + '\n' +
+        'Courriel : ' + (prospect.courriel || 'Non indiqué') + '\n' +
+        'Adresse : ' + (prospect.adresse || 'Non indiquée') + '\n' +
+        'Type : ' + prospect.type + '\n' +
+        'Provenance : ' + prospect.provenance + '\n' +
+        'Commentaires : ' + (prospect.commentaires || 'Aucun');
+
+      const boutonModifier = document.createElement('button');
+      boutonModifier.type = 'button';
+      boutonModifier.textContent = 'Modifier';
+      boutonModifier.onclick = function() {
+        modifierProspect(index);
+      };
+
+      const boutonSupprimer = document.createElement('button');
+      boutonSupprimer.type = 'button';
+      boutonSupprimer.textContent = 'Supprimer';
+      boutonSupprimer.className = 'bouton-supprimer';
+      boutonSupprimer.onclick = function() {
+        supprimerProspect(index);
+      };
+
+      fiche.appendChild(nomComplet);
+      fiche.appendChild(informations);
+      fiche.appendChild(boutonModifier);
+      fiche.appendChild(boutonSupprimer);
+
+      liste.appendChild(fiche);
+    });
+  }
+
+  function modifierProspect(index) {
+    const prospects = obtenirProspects();
+    const prospect = prospects[index];
+
+    document.getElementById('prenom').value = prospect.prenom || '';
+    document.getElementById('nom').value = prospect.nom || '';
+    document.getElementById('telephone').value = prospect.telephone || '';
+    document.getElementById('courriel').value = prospect.courriel || '';
+    document.getElementById('adresse').value = prospect.adresse || '';
+    document.getElementById('provenance').value = prospect.provenance;
+    document.getElementById('typeProspect').value = prospect.type;
+    document.getElementById('commentaires').value =
+      prospect.commentaires || '';
+
+    document.getElementById('indexModification').value = index;
+    document.getElementById('titreFormulaire').textContent =
+      'Modifier le contact';
+    document.getElementById('boutonEnregistrer').textContent =
+      'Enregistrer les modifications';
+    document.getElementById('boutonAnnuler').style.display =
+      'inline-block';
+
+    ouvrirSection('prospects');
+    window.scrollTo({
+      top: document.getElementById('prospects').offsetTop,
+      behavior: 'smooth'
+    });
+  }
+
+  function supprimerProspect(index) {
+    const prospects = obtenirProspects();
+    const prospect = prospects[index];
+
+    const confirmation = confirm(
+      'Voulez-vous vraiment supprimer ' +
+      prospect.prenom +
+      ' ' +
+      prospect.nom +
+      ' ?'
     );
 
-    document.getElementById('messageSucces').style.display = 'block';
+    if (!confirmation) {
+      return;
+    }
 
+    prospects.splice(index, 1);
+    sauvegarderProspects(prospects);
+    afficherProspects();
+  }
+
+  function annulerModification() {
+    viderFormulaire();
+  }
+
+  function viderFormulaire() {
     document.getElementById('prenom').value = '';
     document.getElementById('nom').value = '';
     document.getElementById('telephone').value = '';
     document.getElementById('courriel').value = '';
     document.getElementById('adresse').value = '';
+    document.getElementById('provenance').selectedIndex = 0;
+    document.getElementById('typeProspect').selectedIndex = 0;
     document.getElementById('commentaires').value = '';
+    document.getElementById('indexModification').value = '';
 
-    setTimeout(function() {
-      document.getElementById('messageSucces').style.display = 'none';
-    }, 3000);
+    document.getElementById('titreFormulaire').textContent =
+      'Ajouter un prospect';
+    document.getElementById('boutonEnregistrer').textContent =
+      'Enregistrer le prospect';
+    document.getElementById('boutonAnnuler').style.display = 'none';
   }
 
-  function afficherProspects() {
-    const prospects =
-      JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
+  function afficherMessage(message) {
+    const zoneMessage = document.getElementById('messageSucces');
+    zoneMessage.textContent = message;
+    zoneMessage.style.display = 'block';
 
-    const liste = document.getElementById('listeProspects');
-
-    if (prospects.length === 0) {
-      liste.innerHTML = '<p>Aucun prospect enregistré.</p>';
-      return;
-    }
-
-    liste.innerHTML = '';
-
-    prospects.forEach(function(prospect) {
-      const fiche = document.createElement('div');
-      fiche.className = 'prospect';
-
-      fiche.innerHTML =
-        '<strong>' + prospect.prenom + ' ' + prospect.nom + '</strong><br>' +
-        'Téléphone : ' + (prospect.telephone || 'Non indiqué') + '<br>' +
-        'Courriel : ' + (prospect.courriel || 'Non indiqué') + '<br>' +
-        'Type : ' + prospect.type + '<br>' +
-        'Provenance : ' + prospect.provenance;
-
-      liste.appendChild(fiche);
-    });
+    setTimeout(function() {
+      zoneMessage.style.display = 'none';
+    }, 3000);
   }
 </script>
 
