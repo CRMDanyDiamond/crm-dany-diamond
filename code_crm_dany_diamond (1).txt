@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Dany Diamond</title>
+  <style>
+    *{box-sizing:border-box;font-family:Arial,sans-serif}
+    body{margin:0;background:#f3f4f6;color:#1f2937}
+    header{background:#1f2937;color:white;text-align:center;padding:24px}
+    .container{max-width:1150px;margin:25px auto;padding:20px}
+    .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+    .card,.section{background:white;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.1)}
+    .card{padding:22px 14px;text-align:center;cursor:pointer}
+    .section{display:none;margin-top:24px;padding:24px}
+    .section.active{display:block}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .full{grid-column:1/-1}
+    label{display:block;font-weight:bold;margin:8px 0 5px}
+    input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:6px}
+    textarea{min-height:90px}
+    button{margin:14px 7px 0 0;padding:11px 16px;border:0;border-radius:6px;background:#1f2937;color:white;cursor:pointer}
+    .danger{background:#b91c1c}
+    .success{background:#15803d}
+    .secondary{background:#6b7280}
+    .message{display:none;margin-top:15px;padding:12px;background:#dcfce7;color:#166534;border-radius:6px;font-weight:bold}
+    .fiche{padding:15px;margin-bottom:12px;border:1px solid #e5e7eb;border-radius:8px;background:#fafafa}
+    .fiche p{white-space:pre-line;line-height:1.45}
+    .search{margin-bottom:18px}
+    .apercu{margin-top:20px;padding:40px;min-height:210px;border:2px solid #1f2937;background:white;font-size:20px;line-height:1.6}
+    .param-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px;border:1px solid #e5e7eb;border-radius:7px;margin-bottom:8px}
+    footer{text-align:center;padding:28px;color:#6b7280}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>CRM immobilier Dany Diamond</h1>
+  <p>Prospects, contacts, suivis, anniversaires, enveloppes et paramètres</p>
+</header>
+
+<div class="container">
+  <div class="menu">
+    <div class="card" onclick="ouvrirSection('prospects')"><h2>Prospects</h2><p>Ajouter ou modifier</p></div>
+    <div class="card" onclick="ouvrirSection('contacts')"><h2>Contacts</h2><p>Rechercher et consulter</p></div>
+    <div class="card" onclick="ouvrirSection('suivis')"><h2>Suivis</h2><p>Appels et rappels</p></div>
+    <div class="card" onclick="ouvrirSection('anniversaires')"><h2>Anniversaires</h2><p>Dates et âges</p></div>
+    <div class="card" onclick="ouvrirSection('enveloppes')"><h2>Enveloppes</h2><p>Une ou deux personnes</p></div>
+    <div class="card" onclick="ouvrirSection('parametres')"><h2>Paramètres</h2><p>Gérer les provenances</p></div>
+    <div class="card" onclick="ouvrirSection('sauvegarde')"><h2>Sauvegarde</h2><p>Exporter ou importer</p></div>
+  </div>
+
+  <section id="prospects" class="section active">
+    <h2 id="titreFormulaire">Ajouter un prospect ou un contact</h2>
+    <input id="idModification" type="hidden">
+    <div class="grid">
+      <div><label>Prénom *</label><input id="prenom"></div>
+      <div><label>Nom *</label><input id="nom"></div>
+      <div><label>Téléphone</label><input id="telephone"></div>
+      <div><label>Courriel</label><input id="courriel" type="email"></div>
+      <div><label>Adresse</label><input id="adresse"></div>
+      <div><label>Ville</label><input id="ville"></div>
+      <div><label>Code postal</label><input id="codePostal"></div>
+      <div><label>Date de naissance</label><input id="dateNaissance" type="date"></div>
+      <div><label>Statut</label>
+        <select id="statut">
+          <option>Prospect</option><option>Client actif</option><option>Ancien client</option>
+          <option>Ami ou amie</option><option>Partenaire</option><option>À relancer</option><option>Autre</option>
+        </select>
+      </div>
+      <div><label>Type de contact</label>
+        <select id="typeContact">
+          <option>Acheteur</option><option>Vendeur</option><option>Acheteur et vendeur</option>
+          <option>Courtier immobilier</option><option>Courtier hypothécaire</option>
+          <option>Inspecteur en bâtiment</option><option>Notaire</option><option>Autre</option>
+        </select>
+      </div>
+      <div><label>Provenance</label><select id="provenance"></select></div>
+      <div><label>Priorité</label><select id="priorite"><option>Normale</option><option>Haute</option><option>Urgente</option><option>Faible</option></select></div>
+      <div class="full"><label>Commentaires</label><textarea id="commentaires"></textarea></div>
+    </div>
+    <button id="btnSave" onclick="enregistrerContact()">Enregistrer le contact</button>
+    <button id="btnCancel" class="secondary" style="display:none" onclick="viderFormulaire()">Annuler</button>
+    <div id="messageContact" class="message"></div>
+  </section>
+
+  <section id="contacts" class="section">
+    <h2>Contacts</h2>
+    <div class="search"><input id="recherche" placeholder="Rechercher un nom, téléphone, courriel ou adresse" oninput="afficherContacts()"></div>
+    <div id="listeContacts"></div>
+  </section>
+
+  <section id="suivis" class="section">
+    <h2>Ajouter un suivi</h2>
+    <div class="grid">
+      <div><label>Contact</label><select id="contactSuivi"></select></div>
+      <div><label>Date</label><input id="dateSuivi" type="date"></div>
+      <div><label>Heure</label><input id="heureSuivi" type="time"></div>
+      <div><label>Type</label><select id="typeSuivi"><option>Appel</option><option>Courriel</option><option>Texto</option><option>Rendez-vous</option><option>Relance</option><option>Autre</option></select></div>
+      <div class="full"><label>Note</label><textarea id="noteSuivi"></textarea></div>
+    </div>
+    <button onclick="enregistrerSuivi()">Enregistrer le suivi</button>
+    <div id="listeSuivis" style="margin-top:25px"></div>
+  </section>
+
+  <section id="anniversaires" class="section">
+    <h2>Anniversaires</h2>
+    <div id="listeAnniversaires"></div>
+  </section>
+
+  <section id="enveloppes" class="section">
+    <h2>Préparer une enveloppe</h2>
+    <div class="grid">
+      <div><label>Premier contact</label><select id="env1" onchange="actualiserEnveloppe()"></select></div>
+      <div><label>Deuxième contact facultatif</label><select id="env2" onchange="actualiserEnveloppe()"></select></div>
+    </div>
+    <div id="apercuEnveloppe" class="apercu">Choisissez un contact.</div>
+    <button onclick="imprimerEnveloppe()">Imprimer</button>
+  </section>
+
+  <section id="parametres" class="section">
+    <h2>Paramètres — Provenances</h2>
+    <p>Ajoutez une provenance ici. Elle apparaîtra automatiquement dans le formulaire Prospects.</p>
+    <div class="grid">
+      <div><label>Nouvelle provenance</label><input id="nouvelleProvenance" placeholder="Exemple : Centris"></div>
+      <div style="align-self:end"><button class="success" onclick="ajouterProvenance()">Ajouter la provenance</button></div>
+    </div>
+    <div id="listeProvenances" style="margin-top:20px"></div>
+  </section>
+
+  <section id="sauvegarde" class="section">
+    <h2>Sauvegarde</h2>
+    <button class="success" onclick="exporterSauvegarde()">Exporter</button>
+    <button onclick="document.getElementById('fichierImport').click()">Importer</button>
+    <input id="fichierImport" type="file" accept=".json" style="display:none" onchange="importerSauvegarde(event)">
+  </section>
+</div>
+
+<footer>Dany Diamond — Courtier immobilier agréé DA — 819-247-4777</footer>
+
+<script>
+const K_CONTACTS='prospectsDanyDiamond';
+const K_SUIVIS='suivisDanyDiamond';
+const K_PROV='provenancesDanyDiamond';
+const PROV_DEFAUT=['Facebook','Google','Site Web','Référence','Soumissions Courtiers','Visite libre','Appel entrant','Ami ou amie','Ancien client','Autre'];
+
+function lire(c){try{return JSON.parse(localStorage.getItem(c))||[]}catch(e){return []}}
+function ecrire(c,v){localStorage.setItem(c,JSON.stringify(v))}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function contacts(){const a=lire(K_CONTACTS);a.forEach(x=>{if(!x.id)x.id=id()});ecrire(K_CONTACTS,a);return a}
+function suivis(){return lire(K_SUIVIS)}
+function provenances(){let a=lire(K_PROV);if(!a.length){a=[...PROV_DEFAUT];ecrire(K_PROV,a)}return a}
+
+function ouvrirSection(n){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(n).classList.add('active');
+  if(n==='contacts')afficherContacts();
+  if(n==='suivis'){remplirContactsSuivi();afficherSuivis()}
+  if(n==='anniversaires')afficherAnniversaires();
+  if(n==='enveloppes'){remplirEnveloppes();actualiserEnveloppe()}
+  if(n==='parametres')afficherProvenances();
+}
+
+function chargerProvenances(val=''){
+  const s=document.getElementById('provenance');s.innerHTML='';
+  provenances().forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;if(p===val)o.selected=true;s.appendChild(o)})
+}
+
+function ajouterProvenance(){
+  const c=document.getElementById('nouvelleProvenance'),v=c.value.trim();
+  if(!v){alert('Inscrivez une provenance.');return}
+  const a=provenances();
+  if(a.some(p=>p.toLowerCase()===v.toLowerCase())){alert('Cette provenance existe déjà.');return}
+  const pos=a.indexOf('Autre');if(pos>=0)a.splice(pos,0,v);else a.push(v);
+  ecrire(K_PROV,a);c.value='';chargerProvenances();afficherProvenances();
+}
+
+function supprimerProvenance(v){
+  if(v==='Autre'){alert('La provenance Autre doit rester.');return}
+  if(!confirm('Supprimer '+v+' ?'))return;
+  ecrire(K_PROV,provenances().filter(p=>p!==v));chargerProvenances();afficherProvenances();
+}
+
+function afficherProvenances(){
+  const z=document.getElementById('listeProvenances');z.innerHTML='';
+  provenances().forEach(p=>{
+    const l=document.createElement('div');l.className='param-row';
+    const s=document.createElement('span');s.textContent=p;
+    const b=document.createElement('button');b.textContent='Supprimer';b.className='danger';b.style.margin='0';b.onclick=()=>supprimerProvenance(p);
+    l.append(s,b);z.appendChild(l);
+  })
+}
+
+function enregistrerContact(){
+  const prenom=document.getElementById('prenom').value.trim(),nom=document.getElementById('nom').value.trim();
+  if(!prenom||!nom){alert('Inscrivez le prénom et le nom.');return}
+  const a=contacts(),mod=document.getElementById('idModification').value;
+  const c={id:mod||id(),prenom,nom,telephone:telephone.value.trim(),courriel:courriel.value.trim(),adresse:adresse.value.trim(),ville:ville.value.trim(),codePostal:codePostal.value.trim().toUpperCase(),dateNaissance:dateNaissance.value,statut:statut.value,type:typeContact.value,provenance:provenance.value,priorite:priorite.value,commentaires:commentaires.value.trim()};
+  const i=a.findIndex(x=>x.id===c.id);if(i<0)a.push(c);else a[i]=c;
+  ecrire(K_CONTACTS,a);viderFormulaire();alert('Contact enregistré.');
+}
+
+function viderFormulaire(){
+  ['idModification','prenom','nom','telephone','courriel','adresse','ville','codePostal','dateNaissance','commentaires'].forEach(x=>document.getElementById(x).value='');
+  ['statut','typeContact','priorite'].forEach(x=>document.getElementById(x).selectedIndex=0);
+  chargerProvenances();document.getElementById('titreFormulaire').textContent='Ajouter un prospect ou un contact';
+  document.getElementById('btnSave').textContent='Enregistrer le contact';document.getElementById('btnCancel').style.display='none';
+}
+
+function afficherContacts(){
+  const q=(document.getElementById('recherche').value||'').toLowerCase(),z=document.getElementById('listeContacts');z.innerHTML='';
+  const a=contacts().filter(c=>JSON.stringify(c).toLowerCase().includes(q));
+  if(!a.length){z.innerHTML='<div class="fiche">Aucun contact trouvé.</div>';return}
+  a.forEach(c=>{
+    const f=document.createElement('div');f.className='fiche';
+    f.innerHTML='<strong>'+c.prenom+' '+c.nom+'</strong><p>Téléphone : '+(c.telephone||'Non indiqué')+'\nCourriel : '+(c.courriel||'Non indiqué')+'\nAdresse : '+([c.adresse,c.ville,c.codePostal].filter(Boolean).join(', ')||'Non indiquée')+'\nDate de naissance : '+(c.dateNaissance||'Non indiquée')+'\nStatut : '+c.statut+'\nType : '+c.type+'\nProvenance : '+c.provenance+'\nCommentaires : '+(c.commentaires||'Aucun')+'</p>';
+    const m=document.createElement('button');m.textContent='Modifier';m.onclick=()=>modifierContact(c.id);
+    const d=document.createElement('button');d.textContent='Supprimer';d.className='danger';d.onclick=()=>supprimerContact(c.id);
+    f.append(m,d);z.appendChild(f);
+  })
+}
+
+function modifierContact(i){
+  const c=contacts().find(x=>x.id===i);if(!c)return;
+  ['prenom','nom','telephone','courriel','adresse','ville','codePostal','dateNaissance','commentaires'].forEach(k=>document.getElementById(k).value=c[k]||'');
+  idModification.value=c.id;statut.value=c.statut||'Prospect';typeContact.value=c.type||'Acheteur';priorite.value=c.priorite||'Normale';chargerProvenances(c.provenance);
+  titreFormulaire.textContent='Modifier le contact';btnSave.textContent='Enregistrer les modifications';btnCancel.style.display='inline-block';ouvrirSection('prospects');
+}
+
+function supprimerContact(i){if(!confirm('Supprimer ce contact ?'))return;ecrire(K_CONTACTS,contacts().filter(x=>x.id!==i));afficherContacts()}
+
+function remplirContactsSuivi(){
+  const s=contactSuivi;s.innerHTML='<option value="">Choisir un contact</option>';
+  contacts().forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.prenom+' '+c.nom;s.appendChild(o)})
+}
+function enregistrerSuivi(){
+  if(!contactSuivi.value||!dateSuivi.value||!noteSuivi.value.trim()){alert('Choisissez un contact, une date et inscrivez une note.');return}
+  const c=contacts().find(x=>x.id===contactSuivi.value),a=suivis();
+  a.push({id:id(),contactId:c.id,contactNom:c.prenom+' '+c.nom,date:dateSuivi.value,heure:heureSuivi.value,type:typeSuivi.value,note:noteSuivi.value.trim(),termine:false});
+  ecrire(K_SUIVIS,a);dateSuivi.value='';heureSuivi.value='';noteSuivi.value='';afficherSuivis();
+}
+function afficherSuivis(){
+  const z=listeSuivis;z.innerHTML='';const a=suivis().filter(s=>!s.termine);
+  if(!a.length){z.innerHTML='<div class="fiche">Aucun suivi.</div>';return}
+  a.forEach(s=>{const f=document.createElement('div');f.className='fiche';f.innerHTML='<strong>'+s.contactNom+'</strong><p>Date : '+s.date+'\nHeure : '+(s.heure||'Non indiquée')+'\nType : '+s.type+'\nNote : '+s.note+'</p>';const b=document.createElement('button');b.textContent='Terminé';b.className='success';b.onclick=()=>{const x=suivis();const y=x.find(v=>v.id===s.id);y.termine=true;ecrire(K_SUIVIS,x);afficherSuivis()};f.appendChild(b);z.appendChild(f)})
+}
+
+function afficherAnniversaires(){
+  const z=listeAnniversaires;z.innerHTML='';const a=contacts().filter(c=>c.dateNaissance);
+  if(!a.length){z.innerHTML='<div class="fiche">Aucune date de naissance.</div>';return}
+  a.forEach(c=>{const f=document.createElement('div');f.className='fiche';f.innerHTML='<strong>'+c.prenom+' '+c.nom+'</strong><p>Date de naissance : '+c.dateNaissance+'</p>';z.appendChild(f)})
+}
+
+function remplirEnveloppes(){
+  env1.innerHTML='<option value="">Choisir un contact</option>';env2.innerHTML='<option value="">Aucun deuxième contact</option>';
+  contacts().forEach(c=>{[env1,env2].forEach(s=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.prenom+' '+c.nom;s.appendChild(o)})})
+}
+function actualiserEnveloppe(){
+  if(!env1.value){apercuEnveloppe.textContent='Choisissez un contact.';return}
+  const a=contacts(),c1=a.find(c=>c.id===env1.value),c2=a.find(c=>c.id===env2.value);
+  const noms=c2?c1.prenom+' '+c1.nom+'<br>'+c2.prenom+' '+c2.nom:c1.prenom+' '+c1.nom;
+  apercuEnveloppe.innerHTML='<strong>'+noms+'</strong><br><br>'+([c1.adresse,c1.ville,c1.codePostal].filter(Boolean).join(', ')||'Adresse non indiquée');
+}
+function imprimerEnveloppe(){if(!env1.value){alert('Choisissez un contact.');return}const w=window.open('','','width=900,height=500');w.document.write('<html><body style="font-family:Arial;padding:120px;font-size:20px">'+apercuEnveloppe.innerHTML+'</body></html>');w.document.close();w.print()}
+
+function exporterSauvegarde(){
+  const blob=new Blob([JSON.stringify({contacts:contacts(),suivis:suivis(),provenances:provenances()},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sauvegarde-crm-dany-diamond.json';a.click();
+}
+function importerSauvegarde(e){
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(d.contacts)ecrire(K_CONTACTS,d.contacts);if(d.suivis)ecrire(K_SUIVIS,d.suivis);if(d.provenances)ecrire(K_PROV,d.provenances);chargerProvenances();alert('Sauvegarde importée.')}catch(err){alert('Fichier invalide.')}};r.readAsText(f)
+}
+
+document.addEventListener('DOMContentLoaded',()=>chargerProvenances());
+</script>
+</body>
+</html>
