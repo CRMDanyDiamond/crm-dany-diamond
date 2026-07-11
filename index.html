@@ -241,6 +241,49 @@
       behavior: 'smooth'
     });
   }
+function enregistrerProspect() {
+  const section = document.getElementById('prospects');
+  const champs = section.querySelectorAll('input, select, textarea');
+
+  const prenom = champs[0].value.trim();
+  const nom = champs[1].value.trim();
+
+  if (!prenom || !nom) {
+    alert('Veuillez inscrire le prénom et le nom.');
+    return;
+  }
+
+  const prospect = {
+    prenom: prenom,
+    nom: nom,
+    telephone: champs[2].value,
+    courriel: champs[3].value,
+    adresse: champs[4].value,
+    provenance: champs[5].value,
+    type: champs[6].value,
+    commentaires: champs[7].value
+  };
+
+  const prospects =
+    JSON.parse(localStorage.getItem('prospectsDanyDiamond')) || [];
+
+  prospects.push(prospect);
+
+  localStorage.setItem(
+    'prospectsDanyDiamond',
+    JSON.stringify(prospects)
+  );
+
+  alert('Prospect enregistré avec succès.');
+
+  champs.forEach(champ => {
+    if (champ.tagName === 'SELECT') {
+      champ.selectedIndex = 0;
+    } else {
+      champ.value = '';
+    }
+  });
+}
 </script>
 
 </body>
