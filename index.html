@@ -19,10 +19,10 @@
     }
 
     header {
-      background: #1f2937;
-      color: white;
       padding: 25px;
       text-align: center;
+      color: white;
+      background: #1f2937;
     }
 
     .container {
@@ -38,10 +38,10 @@
     }
 
     .card {
-      background: white;
       padding: 25px 15px;
-      border-radius: 10px;
       text-align: center;
+      background: white;
+      border-radius: 10px;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
       cursor: pointer;
     }
@@ -53,8 +53,8 @@
     .section {
       display: none;
       margin-top: 25px;
-      background: white;
       padding: 25px;
+      background: white;
       border-radius: 10px;
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     }
@@ -83,8 +83,8 @@
       margin-top: 15px;
       margin-right: 8px;
       padding: 11px 17px;
-      background: #1f2937;
       color: white;
+      background: #1f2937;
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -111,11 +111,11 @@
       display: none;
       margin-top: 15px;
       padding: 12px;
+      color: #166534;
+      font-weight: bold;
       background: #dcfce7;
       border: 1px solid #22c55e;
       border-radius: 6px;
-      color: #166534;
-      font-weight: bold;
     }
 
     .recherche {
@@ -127,28 +127,24 @@
       border: 2px solid #1f2937;
     }
 
-    .prospect,
-    .suivi,
-    .anniversaire {
+    .fiche {
+      margin-bottom: 15px;
+      padding: 16px;
+      background: #fafafa;
       border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 15px;
-      background: #fafafa;
     }
 
-    .prospect strong,
-    .suivi strong,
-    .anniversaire strong {
+    .fiche strong {
       font-size: 18px;
     }
 
     .aucun-resultat {
       padding: 20px;
       text-align: center;
+      color: #6b7280;
       background: #f9fafb;
       border-radius: 8px;
-      color: #6b7280;
     }
 
     .suivi-retard {
@@ -164,22 +160,32 @@
     }
 
     .anniversaire-aujourdhui {
-      border-left: 6px solid #d97706;
       background: #fff7ed;
+      border-left: 6px solid #d97706;
     }
 
     .anniversaire-demain {
-      border-left: 6px solid #2563eb;
       background: #eff6ff;
+      border-left: 6px solid #2563eb;
     }
 
     .anniversaire-prochain {
       border-left: 6px solid #15803d;
     }
 
+    .apercu-enveloppe {
+      min-height: 220px;
+      margin-top: 20px;
+      padding: 45px;
+      font-size: 20px;
+      line-height: 1.6;
+      background: white;
+      border: 2px solid #1f2937;
+    }
+
     footer {
-      text-align: center;
       padding: 25px;
+      text-align: center;
       color: #666;
     }
   </style>
@@ -189,7 +195,7 @@
 
 <header>
   <h1>CRM immobilier Dany Diamond</h1>
-  <p>Gestion des prospects, suivis, anniversaires et enveloppes</p>
+  <p>Gestion des prospects, contacts, suivis, anniversaires et enveloppes</p>
 </header>
 
 <div class="container">
@@ -208,26 +214,28 @@
 
     <div class="card" onclick="ouvrirSection('suivis')">
       <h2>Suivis</h2>
-      <p>Ajouter les appels, rendez-vous et rappels.</p>
+      <p>Gérer les appels, rendez-vous et rappels.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('anniversaires')">
       <h2>Anniversaires</h2>
-      <p>Voir les anniversaires et l’âge des contacts.</p>
+      <p>Voir les anniversaires à venir.</p>
     </div>
 
     <div class="card" onclick="ouvrirSection('enveloppes')">
       <h2>Enveloppes</h2>
-      <p>Préparer les adresses à imprimer.</p>
+      <p>Préparer et imprimer une enveloppe.</p>
     </div>
 
   </div>
+
+  <!-- PROSPECTS -->
 
   <div id="prospects" class="section">
 
     <h2 id="titreFormulaire">Ajouter un prospect</h2>
 
-    <input id="indexModification" type="hidden" value="">
+    <input id="indexModification" type="hidden">
 
     <label for="prenom">Prénom</label>
     <input id="prenom" type="text">
@@ -241,8 +249,12 @@
     <label for="courriel">Courriel</label>
     <input id="courriel" type="email">
 
-    <label for="adresse">Adresse</label>
-    <input id="adresse" type="text">
+    <label for="adresse">Adresse complète</label>
+    <input
+      id="adresse"
+      type="text"
+      placeholder="Exemple : 123, rue Principale, Shawinigan, Québec, G9N 1A1"
+    >
 
     <label for="dateNaissance">Date de naissance</label>
     <input id="dateNaissance" type="date">
@@ -283,14 +295,16 @@
       id="boutonAnnuler"
       class="bouton-annuler"
       type="button"
-      onclick="annulerModification()"
+      onclick="viderFormulaire()"
     >
       Annuler la modification
     </button>
 
-    <div id="messageSucces" class="message"></div>
+    <div id="messageProspect" class="message"></div>
 
   </div>
+
+  <!-- CONTACTS -->
 
   <div id="contacts" class="section">
 
@@ -312,6 +326,8 @@
     <div id="listeProspects"></div>
 
   </div>
+
+  <!-- SUIVIS -->
 
   <div id="suivis" class="section">
 
@@ -338,10 +354,9 @@
     </select>
 
     <label for="noteSuivi">Note</label>
-
     <textarea
       id="noteSuivi"
-      placeholder="Exemple : rappeler pour discuter de l’estimation"
+      placeholder="Exemple : rappeler le client pour discuter de son projet"
     ></textarea>
 
     <button type="button" onclick="enregistrerSuivi()">
@@ -356,74 +371,50 @@
 
   </div>
 
+  <!-- ANNIVERSAIRES -->
+
   <div id="anniversaires" class="section">
 
     <h2>Anniversaires à venir</h2>
 
     <p>
-      Les anniversaires sont classés selon la prochaine date à venir.
-      L’âge affiché correspond à l’âge atteint au prochain anniversaire.
+      L’âge indiqué correspond à l’âge que le contact aura à son prochain
+      anniversaire.
     </p>
 
     <div id="listeAnniversaires" style="margin-top: 20px;"></div>
 
   </div>
-<div id="enveloppes" class="section">
 
-  <h2>Préparer une enveloppe</h2>
+  <!-- ENVELOPPES -->
 
-  <button type="button" onclick="chargerContactsEnveloppe()">
-    Charger mes contacts
-  </button>
+  <div id="enveloppes" class="section">
 
-  <label for="contactEnveloppe">Choisir un contact</label>
+    <h2>Préparer une enveloppe</h2>
 
-  <select id="contactEnveloppe" onchange="voirEnveloppe()">
-    <option value="">Choisir un contact</option>
-  </select>
+    <label for="contactEnveloppe">Choisir un contact</label>
 
-  <div
-    id="apercuEnveloppe"
-    style="margin-top:20px; padding:30px; border:2px solid #333; background:white;"
-  >
-    L’adresse apparaîtra ici.
+    <select id="contactEnveloppe" onchange="voirEnveloppe()">
+      <option value="">Choisir un contact</option>
+    </select>
+
+    <div id="apercuEnveloppe" class="apercu-enveloppe">
+      Le nom et l’adresse apparaîtront ici.
+    </div>
+
+    <button type="button" onclick="imprimerEnveloppe()">
+      Imprimer l’enveloppe
+    </button>
+
   </div>
 
-  <button type="button" onclick="imprimerEnveloppeSimple()">
-    Imprimer
-  </button>
-
 </div>
-  
- 
 
 <footer>
   Dany Diamond — Courtier immobilier agréé DA
 </footer>
 
 <script>
-  function ouvrirSection(id) {
-    document.querySelectorAll('.section').forEach(function(section) {
-      section.style.display = 'none';
-    });
-
-    document.getElementById(id).style.display = 'block';
-
-    if (id === 'contacts') {
-      document.getElementById('champRecherche').value = '';
-      afficherProspects();
-    }
-
-    if (id === 'suivis') {
-      remplirListeContactsSuivi();
-      afficherSuivis();
-    }
-
-    if (id === 'anniversaires') {
-      afficherAnniversaires();
-    }
-  }
-
   function obtenirProspects() {
     return JSON.parse(
       localStorage.getItem('prospectsDanyDiamond')
@@ -450,10 +441,47 @@
     );
   }
 
+  function ouvrirSection(id) {
+    document.querySelectorAll('.section').forEach(function(section) {
+      section.style.display = 'none';
+    });
+
+    document.getElementById(id).style.display = 'block';
+
+    if (id === 'contacts') {
+      document.getElementById('champRecherche').value = '';
+      afficherProspects();
+    }
+
+    if (id === 'suivis') {
+      remplirListeContactsSuivi();
+      afficherSuivis();
+    }
+
+    if (id === 'anniversaires') {
+      afficherAnniversaires();
+    }
+
+    if (id === 'enveloppes') {
+      remplirContactsEnveloppe();
+      voirEnveloppe();
+    }
+  }
+
+  function afficherMessage(id, texte) {
+    const message = document.getElementById(id);
+
+    message.textContent = texte;
+    message.style.display = 'block';
+
+    setTimeout(function() {
+      message.style.display = 'none';
+    }, 3000);
+  }
+
   function enregistrerProspect() {
     const prenom = document.getElementById('prenom').value.trim();
     const nom = document.getElementById('nom').value.trim();
-
     const indexModification =
       document.getElementById('indexModification').value;
 
@@ -465,20 +493,13 @@
     const prospect = {
       prenom: prenom,
       nom: nom,
-      telephone:
-        document.getElementById('telephone').value.trim(),
-      courriel:
-        document.getElementById('courriel').value.trim(),
-      adresse:
-        document.getElementById('adresse').value.trim(),
-      dateNaissance:
-        document.getElementById('dateNaissance').value,
-      provenance:
-        document.getElementById('provenance').value,
-      type:
-        document.getElementById('typeProspect').value,
-      commentaires:
-        document.getElementById('commentaires').value.trim()
+      telephone: document.getElementById('telephone').value.trim(),
+      courriel: document.getElementById('courriel').value.trim(),
+      adresse: document.getElementById('adresse').value.trim(),
+      dateNaissance: document.getElementById('dateNaissance').value,
+      provenance: document.getElementById('provenance').value,
+      type: document.getElementById('typeProspect').value,
+      commentaires: document.getElementById('commentaires').value.trim()
     };
 
     const prospects = obtenirProspects();
@@ -487,12 +508,14 @@
       prospects.push(prospect);
 
       afficherMessage(
+        'messageProspect',
         'Le prospect a été enregistré avec succès.'
       );
     } else {
       prospects[Number(indexModification)] = prospect;
 
       afficherMessage(
+        'messageProspect',
         'Le contact a été modifié avec succès.'
       );
     }
@@ -501,85 +524,79 @@
     viderFormulaire();
   }
 
-  function afficherProspects(prospectsFiltres) {
-    const prospects =
-      prospectsFiltres || obtenirProspects();
+  function viderFormulaire() {
+    document.getElementById('prenom').value = '';
+    document.getElementById('nom').value = '';
+    document.getElementById('telephone').value = '';
+    document.getElementById('courriel').value = '';
+    document.getElementById('adresse').value = '';
+    document.getElementById('dateNaissance').value = '';
+    document.getElementById('provenance').selectedIndex = 0;
+    document.getElementById('typeProspect').selectedIndex = 0;
+    document.getElementById('commentaires').value = '';
+    document.getElementById('indexModification').value = '';
 
-    const liste =
-      document.getElementById('listeProspects');
+    document.getElementById('titreFormulaire').textContent =
+      'Ajouter un prospect';
+
+    document.getElementById('boutonEnregistrer').textContent =
+      'Enregistrer le prospect';
+
+    document.getElementById('boutonAnnuler').style.display = 'none';
+  }
+
+  function afficherProspects(resultats) {
+    const liste = document.getElementById('listeProspects');
+
+    const elements = resultats || obtenirProspects().map(
+      function(prospect, index) {
+        return {
+          prospect: prospect,
+          index: index
+        };
+      }
+    );
 
     liste.innerHTML = '';
 
-    if (prospects.length === 0) {
+    if (elements.length === 0) {
       liste.innerHTML =
         '<div class="aucun-resultat">Aucun contact trouvé.</div>';
 
       return;
     }
 
-    prospects.forEach(function(element) {
-      const prospect =
-        element.prospect || element;
+    elements.forEach(function(element) {
+      const prospect = element.prospect;
+      const index = element.index;
 
-      const index =
-        element.index !== undefined
-          ? element.index
-          : obtenirProspects().indexOf(prospect);
+      const fiche = document.createElement('div');
+      fiche.className = 'fiche';
 
-      const fiche =
-        document.createElement('div');
+      const nomComplet = document.createElement('strong');
+      nomComplet.textContent = prospect.prenom + ' ' + prospect.nom;
 
-      fiche.className = 'prospect';
+      const informations = document.createElement('p');
 
-      const nomComplet =
-        document.createElement('strong');
-
-      nomComplet.textContent =
-        prospect.prenom + ' ' + prospect.nom;
-
-      const informations =
-        document.createElement('p');
-
-      let naissanceTexte = 'Non indiquée';
-      let ageTexte = 'Non calculé';
+      let naissance = 'Non indiquée';
+      let age = 'Non calculé';
 
       if (prospect.dateNaissance) {
-        naissanceTexte =
-          formaterDate(prospect.dateNaissance);
-
-        ageTexte =
-          calculerAgeActuel(prospect.dateNaissance) +
-          ' ans';
+        naissance = formaterDate(prospect.dateNaissance);
+        age = calculerAgeActuel(prospect.dateNaissance) + ' ans';
       }
 
       informations.innerText =
-        'Téléphone : ' +
-        (prospect.telephone || 'Non indiqué') +
-        '\n' +
-        'Courriel : ' +
-        (prospect.courriel || 'Non indiqué') +
-        '\n' +
-        'Adresse : ' +
-        (prospect.adresse || 'Non indiquée') +
-        '\n' +
-        'Date de naissance : ' +
-        naissanceTexte +
-        '\n' +
-        'Âge actuel : ' +
-        ageTexte +
-        '\n' +
-        'Type : ' +
-        prospect.type +
-        '\n' +
-        'Provenance : ' +
-        prospect.provenance +
-        '\n' +
-        'Commentaires : ' +
-        (prospect.commentaires || 'Aucun');
+        'Téléphone : ' + (prospect.telephone || 'Non indiqué') + '\n' +
+        'Courriel : ' + (prospect.courriel || 'Non indiqué') + '\n' +
+        'Adresse : ' + (prospect.adresse || 'Non indiquée') + '\n' +
+        'Date de naissance : ' + naissance + '\n' +
+        'Âge actuel : ' + age + '\n' +
+        'Type : ' + (prospect.type || 'Non indiqué') + '\n' +
+        'Provenance : ' + (prospect.provenance || 'Non indiquée') + '\n' +
+        'Commentaires : ' + (prospect.commentaires || 'Aucun');
 
-      const boutonModifier =
-        document.createElement('button');
-
+      const boutonModifier = document.createElement('button');
       boutonModifier.type = 'button';
       boutonModifier.textContent = 'Modifier';
 
@@ -587,9 +604,7 @@
         modifierProspect(index);
       };
 
-      const boutonSupprimer =
-        document.createElement('button');
-
+      const boutonSupprimer = document.createElement('button');
       boutonSupprimer.type = 'button';
       boutonSupprimer.textContent = 'Supprimer';
       boutonSupprimer.className = 'bouton-supprimer';
@@ -609,89 +624,60 @@
 
   function rechercherProspects() {
     const recherche =
-      document
-        .getElementById('champRecherche')
-        .value
+      document.getElementById('champRecherche').value
         .trim()
         .toLowerCase();
 
     const prospects = obtenirProspects();
 
-    if (recherche === '') {
-      afficherProspects();
-      return;
-    }
+    const resultats = prospects
+      .map(function(prospect, index) {
+        return {
+          prospect: prospect,
+          index: index
+        };
+      })
+      .filter(function(element) {
+        const prospect = element.prospect;
 
-    const resultats =
-      prospects
-        .map(function(prospect, index) {
-          return {
-            prospect: prospect,
-            index: index
-          };
-        })
-        .filter(function(element) {
-          const prospect = element.prospect;
+        const texte =
+          (prospect.prenom || '') + ' ' +
+          (prospect.nom || '') + ' ' +
+          (prospect.telephone || '') + ' ' +
+          (prospect.courriel || '') + ' ' +
+          (prospect.adresse || '') + ' ' +
+          (prospect.provenance || '') + ' ' +
+          (prospect.type || '') + ' ' +
+          (prospect.commentaires || '');
 
-          const texte =
-            (prospect.prenom || '') + ' ' +
-            (prospect.nom || '') + ' ' +
-            (prospect.telephone || '') + ' ' +
-            (prospect.courriel || '') + ' ' +
-            (prospect.adresse || '') + ' ' +
-            (prospect.dateNaissance || '') + ' ' +
-            (prospect.provenance || '') + ' ' +
-            (prospect.type || '') + ' ' +
-            (prospect.commentaires || '');
-
-          return texte
-            .toLowerCase()
-            .includes(recherche);
-        });
+        return texte.toLowerCase().includes(recherche);
+      });
 
     afficherProspects(resultats);
   }
 
   function modifierProspect(index) {
-    const prospects = obtenirProspects();
-    const prospect = prospects[index];
+    const prospect = obtenirProspects()[index];
 
-    document.getElementById('prenom').value =
-      prospect.prenom || '';
-
-    document.getElementById('nom').value =
-      prospect.nom || '';
-
-    document.getElementById('telephone').value =
-      prospect.telephone || '';
-
-    document.getElementById('courriel').value =
-      prospect.courriel || '';
-
-    document.getElementById('adresse').value =
-      prospect.adresse || '';
-
+    document.getElementById('prenom').value = prospect.prenom || '';
+    document.getElementById('nom').value = prospect.nom || '';
+    document.getElementById('telephone').value = prospect.telephone || '';
+    document.getElementById('courriel').value = prospect.courriel || '';
+    document.getElementById('adresse').value = prospect.adresse || '';
     document.getElementById('dateNaissance').value =
       prospect.dateNaissance || '';
-
     document.getElementById('provenance').value =
-      prospect.provenance;
-
+      prospect.provenance || 'Facebook';
     document.getElementById('typeProspect').value =
-      prospect.type;
-
+      prospect.type || 'Acheteur';
     document.getElementById('commentaires').value =
       prospect.commentaires || '';
 
-    document.getElementById('indexModification').value =
-      index;
-
+    document.getElementById('indexModification').value = index;
     document.getElementById('titreFormulaire').textContent =
       'Modifier le contact';
-
     document.getElementById('boutonEnregistrer').textContent =
       'Enregistrer les modifications';
-
     document.getElementById('boutonAnnuler').style.display =
       'inline-block';
 
@@ -715,79 +701,30 @@
     }
 
     prospects.splice(index, 1);
-
     sauvegarderProspects(prospects);
     rechercherProspects();
   }
 
-  function annulerModification() {
-    viderFormulaire();
-  }
-
-  function viderFormulaire() {
-    document.getElementById('prenom').value = '';
-    document.getElementById('nom').value = '';
-    document.getElementById('telephone').value = '';
-    document.getElementById('courriel').value = '';
-    document.getElementById('adresse').value = '';
-    document.getElementById('dateNaissance').value = '';
-    document.getElementById('provenance').selectedIndex = 0;
-    document.getElementById('typeProspect').selectedIndex = 0;
-    document.getElementById('commentaires').value = '';
-    document.getElementById('indexModification').value = '';
-
-    document.getElementById('titreFormulaire').textContent =
-      'Ajouter un prospect';
-
-    document.getElementById('boutonEnregistrer').textContent =
-      'Enregistrer le prospect';
-
-    document.getElementById('boutonAnnuler').style.display =
-      'none';
-  }
-
-  function afficherMessage(message) {
-    const zoneMessage =
-      document.getElementById('messageSucces');
-
-    zoneMessage.textContent = message;
-    zoneMessage.style.display = 'block';
-
-    setTimeout(function() {
-      zoneMessage.style.display = 'none';
-    }, 3000);
-  }
-
   function remplirListeContactsSuivi() {
     const prospects = obtenirProspects();
+    const liste = document.getElementById('contactSuivi');
 
-    const select =
-      document.getElementById('contactSuivi');
-
-    select.innerHTML = '';
+    liste.innerHTML = '';
 
     if (prospects.length === 0) {
-      const option =
-        document.createElement('option');
+      liste.innerHTML =
+        '<option value="">Aucun contact enregistré</option>';
 
-      option.value = '';
-      option.textContent =
-        'Aucun contact enregistré';
-
-      select.appendChild(option);
       return;
     }
 
     prospects.forEach(function(prospect, index) {
-      const option =
-        document.createElement('option');
+      const option = document.createElement('option');
 
       option.value = index;
+      option.textContent = prospect.prenom + ' ' + prospect.nom;
 
-      option.textContent =
-        prospect.prenom + ' ' + prospect.nom;
-
-      select.appendChild(option);
+      liste.appendChild(option);
     });
   }
 
@@ -795,51 +732,30 @@
     const contactIndex =
       document.getElementById('contactSuivi').value;
 
-    const date =
-      document.getElementById('dateSuivi').value;
-
-    const heure =
-      document.getElementById('heureSuivi').value;
-
-    const type =
-      document.getElementById('typeSuivi').value;
-
-    const note =
-      document.getElementById('noteSuivi').value.trim();
+    const date = document.getElementById('dateSuivi').value;
+    const heure = document.getElementById('heureSuivi').value;
+    const type = document.getElementById('typeSuivi').value;
+    const note = document.getElementById('noteSuivi').value.trim();
 
     if (contactIndex === '') {
-      alert(
-        'Veuillez d’abord enregistrer un contact.'
-      );
-
+      alert('Veuillez d’abord enregistrer un contact.');
       return;
     }
 
     if (date === '') {
-      alert(
-        'Veuillez choisir une date de suivi.'
-      );
-
+      alert('Veuillez choisir une date de suivi.');
       return;
     }
 
     if (note === '') {
-      alert(
-        'Veuillez inscrire une note pour le suivi.'
-      );
-
+      alert('Veuillez inscrire une note.');
       return;
     }
 
-    const prospects = obtenirProspects();
-
-    const contact =
-      prospects[Number(contactIndex)];
+    const contact = obtenirProspects()[Number(contactIndex)];
 
     const suivi = {
-      contactNom:
-        contact.prenom + ' ' + contact.nom,
-      contactIndex: Number(contactIndex),
+      contactNom: contact.prenom + ' ' + contact.nom,
       date: date,
       heure: heure,
       type: type,
@@ -852,11 +768,7 @@
     suivis.push(suivi);
 
     suivis.sort(function(a, b) {
-      return (
-        a.date + a.heure
-      ).localeCompare(
-        b.date + b.heure
-      );
+      return (a.date + a.heure).localeCompare(b.date + b.heure);
     });
 
     sauvegarderSuivis(suivis);
@@ -866,40 +778,30 @@
     document.getElementById('typeSuivi').selectedIndex = 0;
     document.getElementById('noteSuivi').value = '';
 
-    const message =
-      document.getElementById('messageSuivi');
-
-    message.textContent =
-      'Le suivi a été enregistré avec succès.';
-
-    message.style.display = 'block';
-
-    setTimeout(function() {
-      message.style.display = 'none';
-    }, 3000);
+    afficherMessage(
+      'messageSuivi',
+      'Le suivi a été enregistré avec succès.'
+    );
 
     afficherSuivis();
   }
 
   function afficherSuivis() {
     const suivis = obtenirSuivis();
-
-    const liste =
-      document.getElementById('listeSuivis');
+    const liste = document.getElementById('listeSuivis');
 
     liste.innerHTML = '';
 
-    const suivisActifs =
-      suivis
-        .map(function(suivi, index) {
-          return {
-            suivi: suivi,
-            index: index
-          };
-        })
-        .filter(function(element) {
-          return !element.suivi.complete;
-        });
+    const suivisActifs = suivis
+      .map(function(suivi, index) {
+        return {
+          suivi: suivi,
+          index: index
+        };
+      })
+      .filter(function(element) {
+        return !element.suivi.complete;
+      });
 
     if (suivisActifs.length === 0) {
       liste.innerHTML =
@@ -909,71 +811,47 @@
     }
 
     const aujourdHui = new Date();
-
     aujourdHui.setHours(0, 0, 0, 0);
 
     suivisActifs.forEach(function(element) {
       const suivi = element.suivi;
       const index = element.index;
+      const dateSuivi = new Date(suivi.date + 'T00:00:00');
 
-      const dateSuivi =
-        new Date(suivi.date + 'T00:00:00');
-
-      const fiche =
-        document.createElement('div');
-
-      fiche.className = 'suivi';
+      const fiche = document.createElement('div');
+      fiche.className = 'fiche';
 
       if (dateSuivi < aujourdHui) {
         fiche.classList.add('suivi-retard');
-      } else if (
-        dateSuivi.getTime() ===
-        aujourdHui.getTime()
-      ) {
+      } else if (dateSuivi.getTime() === aujourdHui.getTime()) {
         fiche.classList.add('suivi-aujourdhui');
       } else {
         fiche.classList.add('suivi-futur');
       }
 
-      const titre =
-        document.createElement('strong');
-
+      const titre = document.createElement('strong');
       titre.textContent = suivi.contactNom;
 
-      const informations =
-        document.createElement('p');
+      const informations = document.createElement('p');
 
       informations.innerText =
-        'Date : ' +
-        formaterDate(suivi.date) +
-        '\n' +
-        'Heure : ' +
-        (suivi.heure || 'Non indiquée') +
-        '\n' +
-        'Type : ' +
-        suivi.type +
-        '\n' +
-        'Note : ' +
-        suivi.note;
+        'Date : ' + formaterDate(suivi.date) + '\n' +
+        'Heure : ' + (suivi.heure || 'Non indiquée') + '\n' +
+        'Type : ' + suivi.type + '\n' +
+        'Note : ' + suivi.note;
 
-      const boutonComplete =
-        document.createElement('button');
+      const boutonTerminer = document.createElement('button');
+      boutonTerminer.type = 'button';
+      boutonTerminer.textContent = 'Marquer comme terminé';
 
-      boutonComplete.type = 'button';
-      boutonComplete.textContent =
-        'Marquer comme terminé';
-
-      boutonComplete.onclick = function() {
+      boutonTerminer.onclick = function() {
         terminerSuivi(index);
       };
 
-      const boutonSupprimer =
-        document.createElement('button');
-
+      const boutonSupprimer = document.createElement('button');
       boutonSupprimer.type = 'button';
       boutonSupprimer.textContent = 'Supprimer';
-      boutonSupprimer.className =
-        'bouton-supprimer';
+      boutonSupprimer.className = 'bouton-supprimer';
 
       boutonSupprimer.onclick = function() {
         supprimerSuivi(index);
@@ -981,7 +859,7 @@
 
       fiche.appendChild(titre);
       fiche.appendChild(informations);
-      fiche.appendChild(boutonComplete);
+      fiche.appendChild(boutonTerminer);
       fiche.appendChild(boutonSupprimer);
 
       liste.appendChild(fiche);
@@ -1015,38 +893,30 @@
   }
 
   function afficherAnniversaires() {
-    const prospects = obtenirProspects();
+    const liste = document.getElementById('listeAnniversaires');
 
-    const liste =
-      document.getElementById('listeAnniversaires');
+    const anniversaires = obtenirProspects()
+      .filter(function(prospect) {
+        return prospect.dateNaissance;
+      })
+      .map(function(prospect) {
+        const prochain =
+          calculerProchainAnniversaire(prospect.dateNaissance);
+
+        return {
+          prospect: prospect,
+          date: prochain.date,
+          jours: prochain.jours,
+          age: prochain.age
+        };
+      })
+      .sort(function(a, b) {
+        return a.date - b.date;
+      });
 
     liste.innerHTML = '';
 
-    const contactsAvecNaissance =
-      prospects
-        .filter(function(prospect) {
-          return prospect.dateNaissance;
-        })
-        .map(function(prospect) {
-          const prochain =
-            calculerProchainAnniversaire(
-              prospect.dateNaissance
-            );
-
-          return {
-            prospect: prospect,
-            dateProchaine: prochain.date,
-            joursRestants: prochain.joursRestants,
-            prochainAge: prochain.prochainAge
-          };
-        })
-        .sort(function(a, b) {
-          return (
-            a.dateProchaine - b.dateProchaine
-          );
-        });
-
-    if (contactsAvecNaissance.length === 0) {
+    if (anniversaires.length === 0) {
       liste.innerHTML =
         '<div class="aucun-resultat">' +
         'Aucune date de naissance enregistrée.' +
@@ -1055,65 +925,47 @@
       return;
     }
 
-    contactsAvecNaissance.forEach(function(element) {
-      const prospect = element.prospect;
+    anniversaires.forEach(function(element) {
+      const fiche = document.createElement('div');
+      fiche.className = 'fiche';
 
-      const fiche =
-        document.createElement('div');
-
-      fiche.className = 'anniversaire';
-
-      if (element.joursRestants === 0) {
-        fiche.classList.add(
-          'anniversaire-aujourdhui'
-        );
-      } else if (element.joursRestants === 1) {
-        fiche.classList.add(
-          'anniversaire-demain'
-        );
+      if (element.jours === 0) {
+        fiche.classList.add('anniversaire-aujourdhui');
+      } else if (element.jours === 1) {
+        fiche.classList.add('anniversaire-demain');
       } else {
-        fiche.classList.add(
-          'anniversaire-prochain'
-        );
+        fiche.classList.add('anniversaire-prochain');
       }
 
-      const titre =
-        document.createElement('strong');
+      const titre = document.createElement('strong');
 
       titre.textContent =
-        prospect.prenom + ' ' + prospect.nom;
+        element.prospect.prenom +
+        ' ' +
+        element.prospect.nom;
 
-      const informations =
-        document.createElement('p');
+      const informations = document.createElement('p');
 
-      let messageJours = '';
+      let messageJours;
 
-      if (element.joursRestants === 0) {
-        messageJours =
-          'Anniversaire aujourd’hui';
-      } else if (element.joursRestants === 1) {
-        messageJours =
-          'Anniversaire demain';
+      if (element.jours === 0) {
+        messageJours = 'Anniversaire aujourd’hui';
+      } else if (element.jours === 1) {
+        messageJours = 'Anniversaire demain';
       } else {
-        messageJours =
-          'Dans ' +
-          element.joursRestants +
-          ' jours';
+        messageJours = 'Dans ' + element.jours + ' jours';
       }
 
       informations.innerText =
         'Date de naissance : ' +
-        formaterDate(prospect.dateNaissance) +
+        formaterDate(element.prospect.dateNaissance) +
         '\n' +
         'Prochain anniversaire : ' +
-        element.dateProchaine.toLocaleDateString(
-          'fr-CA'
-        ) +
+        element.date.toLocaleDateString('fr-CA') +
         '\n' +
         'Âge au prochain anniversaire : ' +
-        element.prochainAge +
-        ' ans' +
-        '\n' +
+        element.age +
+        ' ans\n' +
         messageJours;
 
       fiche.appendChild(titre);
@@ -1123,9 +975,119 @@
     });
   }
 
-  function calculerAgeActuel(dateNaissanceTexte) {
+  function remplirContactsEnveloppe() {
+    const contacts = obtenirProspects();
+    const liste = document.getElementById('contactEnveloppe');
+
+    liste.innerHTML =
+      '<option value="">Choisir un contact</option>';
+
+    contacts.forEach(function(contact, index) {
+      const option = document.createElement('option');
+
+      option.value = index;
+      option.textContent = contact.prenom + ' ' + contact.nom;
+
+      liste.appendChild(option);
+    });
+  }
+
+  function voirEnveloppe() {
+    const index =
+      document.getElementById('contactEnveloppe').value;
+
+    const apercu =
+      document.getElementById('apercuEnveloppe');
+
+    if (index === '') {
+      apercu.innerHTML =
+        'Le nom et l’adresse apparaîtront ici.';
+
+      return;
+    }
+
+    const contact = obtenirProspects()[Number(index)];
+
+    apercu.innerHTML =
+      '<strong>' +
+      echapperTexte(contact.prenom + ' ' + contact.nom) +
+      '</strong><br><br>' +
+      echapperTexte(contact.adresse || 'Adresse non indiquée');
+  }
+
+  function imprimerEnveloppe() {
+    const index =
+      document.getElementById('contactEnveloppe').value;
+
+    if (index === '') {
+      alert('Veuillez choisir un contact.');
+      return;
+    }
+
+    const contenu =
+      document.getElementById('apercuEnveloppe').innerHTML;
+
+    const fenetre =
+      window.open('', '', 'width=950,height=550');
+
+    if (!fenetre) {
+      alert(
+        'La fenêtre d’impression a été bloquée. Autorisez les fenêtres contextuelles.'
+      );
+
+      return;
+    }
+
+    fenetre.document.write(`
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <title>Enveloppe</title>
+
+        <style>
+          @page {
+            size: 9.5in 4.125in;
+            margin: 0;
+          }
+
+          body {
+            margin: 0;
+            width: 9.5in;
+            height: 4.125in;
+            font-family: Arial, sans-serif;
+            position: relative;
+          }
+
+          .adresse {
+            position: absolute;
+            top: 1.45in;
+            left: 4.1in;
+            font-size: 18px;
+            line-height: 1.5;
+          }
+        </style>
+      </head>
+
+      <body>
+        <div class="adresse">
+          ${contenu}
+        </div>
+      </body>
+      </html>
+    `);
+
+    fenetre.document.close();
+
+    setTimeout(function() {
+      fenetre.focus();
+      fenetre.print();
+    }, 500);
+  }
+
+  function calculerAgeActuel(dateNaissance) {
     const naissance =
-      new Date(dateNaissanceTexte + 'T00:00:00');
+      new Date(dateNaissance + 'T00:00:00');
 
     const aujourdHui = new Date();
 
@@ -1134,13 +1096,10 @@
       naissance.getFullYear();
 
     const anniversairePasse =
-      aujourdHui.getMonth() >
-      naissance.getMonth() ||
+      aujourdHui.getMonth() > naissance.getMonth() ||
       (
-        aujourdHui.getMonth() ===
-        naissance.getMonth() &&
-        aujourdHui.getDate() >=
-        naissance.getDate()
+        aujourdHui.getMonth() === naissance.getMonth() &&
+        aujourdHui.getDate() >= naissance.getDate()
       );
 
     if (!anniversairePasse) {
@@ -1150,25 +1109,22 @@
     return age;
   }
 
-  function calculerProchainAnniversaire(
-    dateNaissanceTexte
-  ) {
+  function calculerProchainAnniversaire(dateNaissance) {
     const naissance =
-      new Date(dateNaissanceTexte + 'T00:00:00');
+      new Date(dateNaissance + 'T00:00:00');
 
     const aujourdHui = new Date();
-
     aujourdHui.setHours(0, 0, 0, 0);
 
-    let prochainAnniversaire =
+    let prochain =
       new Date(
         aujourdHui.getFullYear(),
         naissance.getMonth(),
         naissance.getDate()
       );
 
-    if (prochainAnniversaire < aujourdHui) {
-      prochainAnniversaire =
+    if (prochain < aujourdHui) {
+      prochain =
         new Date(
           aujourdHui.getFullYear() + 1,
           naissance.getMonth(),
@@ -1176,23 +1132,20 @@
         );
     }
 
-    const difference =
-      prochainAnniversaire - aujourdHui;
-
-    const joursRestants =
+    const jours =
       Math.round(
-        difference /
+        (prochain - aujourdHui) /
         (1000 * 60 * 60 * 24)
       );
 
-    const prochainAge =
-      prochainAnniversaire.getFullYear() -
+    const age =
+      prochain.getFullYear() -
       naissance.getFullYear();
 
     return {
-      date: prochainAnniversaire,
-      joursRestants: joursRestants,
-      prochainAge: prochainAge
+      date: prochain,
+      jours: jours,
+      age: age
     };
   }
 
@@ -1210,6 +1163,12 @@
       '/' +
       parties[0]
     );
+  }
+
+  function echapperTexte(texte) {
+    const element = document.createElement('div');
+    element.textContent = texte;
+    return element.innerHTML;
   }
 </script>
 
