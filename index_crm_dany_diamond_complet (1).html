@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM Dany Diamond</title>
+  <style>
+    :root{
+      --fonce:#1f2937;--gris:#f3f4f6;--blanc:#fff;--bordure:#d1d5db;
+      --vert:#15803d;--rouge:#b91c1c;--orange:#d97706;--bleu:#2563eb;
+    }
+    *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+    body{margin:0;background:var(--gris);color:var(--fonce)}
+    header{background:var(--fonce);color:#fff;text-align:center;padding:24px}
+    header h1{margin:0 0 8px}
+    .avis{background:#ffedd5;color:#7c2d12;text-align:center;padding:10px}
+    .container{max-width:1250px;margin:24px auto;padding:18px}
+    .menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px}
+    .card,.section,.stat{background:#fff;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.09)}
+    .card{padding:20px 12px;text-align:center;cursor:pointer}
+    .card:hover{transform:translateY(-2px)}
+    .card h2{font-size:19px;margin:0 0 7px}
+    .card p{margin:0;color:#6b7280;font-size:14px}
+    .section{display:none;margin-top:24px;padding:24px}
+    .section.active{display:block}
+    .grille{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+    .pleine{grid-column:1/-1}
+    label{display:block;font-weight:bold;margin:5px 0 6px}
+    input,select,textarea{width:100%;padding:11px;border:1px solid var(--bordure);border-radius:6px}
+    textarea{min-height:90px;resize:vertical}
+    button{margin:14px 7px 0 0;padding:11px 16px;border:0;border-radius:6px;background:var(--fonce);color:#fff;cursor:pointer}
+    .vert{background:var(--vert)} .rouge{background:var(--rouge)} .bleu{background:var(--bleu)} .gris{background:#6b7280}
+    .message{display:none;margin-top:15px;padding:12px;border-radius:6px;background:#dcfce7;color:#166534;font-weight:bold}
+    .erreur{background:#fee2e2;color:#991b1b}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .stat{text-align:center;padding:20px}.stat b{display:block;font-size:30px}
+    .filtres{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:18px}
+    .fiche{background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-bottom:14px}
+    .fiche p{white-space:pre-line;line-height:1.45}
+    .retard{border-left:6px solid var(--rouge)} .aujourdhui{border-left:6px solid var(--orange)} .futur{border-left:6px solid var(--vert)}
+    .apercu{min-height:220px;border:2px solid var(--fonce);padding:42px;margin-top:20px;font-size:20px;line-height:1.55}
+    .liste-parametre{margin-top:18px}
+    .ligne-parametre{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:7px;margin-bottom:8px;background:#fafafa}
+    footer{text-align:center;color:#6b7280;padding:28px}
+    @media(max-width:800px){.grille,.filtres,.stats{grid-template-columns:1fr}.pleine{grid-column:auto}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>CRM immobilier Dany Diamond</h1>
+  <p>Contacts, suivis, anniversaires, enveloppes et paramètres</p>
+</header>
+
+<div class="avis">Les données sont enregistrées dans ce navigateur. Faites régulièrement une sauvegarde.</div>
+
+<div class="container">
+  <div class="menu">
+    <div class="card" onclick="ouvrirSection('tableauBord')"><h2>Tableau de bord</h2><p>Résumé du CRM</p></div>
+    <div class="card" onclick="ouvrirSection('prospects')"><h2>Prospects</h2><p>Ajouter ou modifier</p></div>
+    <div class="card" onclick="ouvrirSection('contacts')"><h2>Contacts</h2><p>Rechercher et consulter</p></div>
+    <div class="card" onclick="ouvrirSection('suivis')"><h2>Suivis</h2><p>Appels et rappels</p></div>
+    <div class="card" onclick="ouvrirSection('anniversaires')"><h2>Anniversaires</h2><p>Dates et âges</p></div>
+    <div class="card" onclick="ouvrirSection('enveloppes')"><h2>Enveloppes</h2><p>Une ou deux personnes</p></div>
+    <div class="card" onclick="ouvrirSection('sauvegarde')"><h2>Sauvegarde</h2><p>Exporter ou importer</p></div>
+    <div class="card" onclick="ouvrirSection('parametres')"><h2>Paramètres</h2><p>Gérer les provenances</p></div>
+  </div>
+
+  <section id="tableauBord" class="section active">
+    <h2>Tableau de bord</h2>
+    <div class="stats">
+      <div class="stat"><b id="statContacts">0</b>Contacts</div>
+      <div class="stat"><b id="statSuivis">0</b>Suivis à faire</div>
+      <div class="stat"><b id="statRetards">0</b>Suivis en retard</div>
+      <div class="stat"><b id="statAnniversaires">0</b>Anniversaires dans 30 jours</div>
+    </div>
+    <h2 style="margin-top:28px">Suivis urgents</h2>
+    <div id="listeSuivisUrgents"></div>
+  </section>
+
+  <section id="prospects" class="section">
+    <h2 id="titreFormulaire">Ajouter un prospect ou un contact</h2>
+    <input id="idModification" type="hidden">
+    <div class="grille">
+      <div><label>Prénom *</label><input id="prenom"></div>
+      <div><label>Nom *</label><input id="nom"></div>
+      <div><label>Téléphone principal</label><input id="telephone" type="tel"></div>
+      <div><label>Deuxième téléphone</label><input id="telephone2" type="tel"></div>
+      <div><label>Courriel</label><input id="courriel" type="email"></div>
+      <div><label>Date de naissance</label><input id="dateNaissance" type="date"></div>
+      <div><label>Adresse</label><input id="adresse" placeholder="123, rue Principale"></div>
+      <div><label>Ville</label><input id="ville"></div>
+      <div><label>Province</label><input id="province" value="Québec"></div>
+      <div><label>Code postal</label><input id="codePostal"></div>
+      <div><label>Statut</label>
+        <select id="statut">
+          <option>Prospect</option><option>Client actif</option><option>Ancien client</option>
+          <option>Ami ou amie</option><option>Partenaire</option><option>À relancer</option>
+          <option>Inactif</option><option>Autre</option>
+        </select>
+      </div>
+      <div><label>Type de contact</label>
+        <select id="typeContact">
+          <option>Acheteur</option><option>Vendeur</option><option>Acheteur et vendeur</option>
+          <option>Propriétaire</option><option>Locataire</option><option>Courtier immobilier</option>
+          <option>Courtier hypothécaire</option><option>Inspecteur en bâtiment</option>
+          <option>Notaire</option><option>Entrepreneur</option><option>Autre</option>
+        </select>
+      </div>
+      <div><label>Provenance</label><select id="provenance"></select></div>
+      <div><label>Priorité</label>
+        <select id="priorite"><option>Normale</option><option>Haute</option><option>Urgente</option><option>Faible</option></select>
+      </div>
+      <div class="pleine"><label>Commentaires</label><textarea id="commentaires"></textarea></div>
+    </div>
+    <button id="boutonEnregistrer" onclick="enregistrerContact()">Enregistrer le contact</button>
+    <button id="boutonAnnuler" class="gris" onclick="viderFormulaireContact()" style="display:none">Annuler la modification</button>
+    <div id="messageContact" class="message"></div>
+  </section>
+
+  <section id="contacts" class="section">
+    <h2>Contacts enregistrés</h2>
+    <div class="filtres">
+      <div><label>Rechercher</label><input id="rechercheContact" oninput="afficherContacts()" placeholder="Nom, téléphone, courriel, adresse ou commentaire"></div>
+      <div><label>Statut</label>
+        <select id="filtreStatut" onchange="afficherContacts()">
+          <option value="">Tous</option><option>Prospect</option><option>Client actif</option><option>Ancien client</option>
+          <option>Ami ou amie</option><option>Partenaire</option><option>À relancer</option><option>Inactif</option><option>Autre</option>
+        </select>
+      </div>
+      <div><label>Type</label>
+        <select id="filtreType" onchange="afficherContacts()">
+          <option value="">Tous</option><option>Acheteur</option><option>Vendeur</option><option>Acheteur et vendeur</option>
+          <option>Propriétaire</option><option>Locataire</option><option>Courtier immobilier</option>
+          <option>Courtier hypothécaire</option><option>Inspecteur en bâtiment</option><option>Notaire</option><option>Entrepreneur</option><option>Autre</option>
+        </select>
+      </div>
+    </div>
+    <div id="listeContacts"></div>
+  </section>
+
+  <section id="suivis" class="section">
+    <h2>Ajouter un suivi</h2>
+    <input id="idSuiviModification" type="hidden">
+    <div class="grille">
+      <div><label>Contact *</label><select id="contactSuivi"></select></div>
+      <div><label>Type de suivi</label>
+        <select id="typeSuivi"><option>Appel téléphonique</option><option>Courriel</option><option>Texto</option><option>Rendez-vous</option><option>Visite</option><option>Relance</option><option>Envoi de documents</option><option>Autre</option></select>
+      </div>
+      <div><label>Date *</label><input id="dateSuivi" type="date"></div>
+      <div><label>Heure</label><input id="heureSuivi" type="time"></div>
+      <div><label>Priorité</label><select id="prioriteSuivi"><option>Normale</option><option>Haute</option><option>Urgente</option><option>Faible</option></select></div>
+      <div><label>État</label><select id="statutSuivi"><option>À faire</option><option>En attente</option></select></div>
+      <div class="pleine"><label>Note *</label><textarea id="noteSuivi"></textarea></div>
+    </div>
+    <button id="boutonEnregistrerSuivi" onclick="enregistrerSuivi()">Enregistrer le suivi</button>
+    <button id="boutonAnnulerSuivi" class="gris" onclick="viderFormulaireSuivi()" style="display:none">Annuler la modification</button>
+    <div id="messageSuivi" class="message"></div>
+    <h2 style="margin-top:30px">Suivis à faire</h2>
+    <div id="listeSuivis"></div>
+  </section>
+
+  <section id="anniversaires" class="section">
+    <h2>Anniversaires à venir</h2>
+    <div id="listeAnniversaires"></div>
+  </section>
+
+  <section id="enveloppes" class="section">
+    <h2>Préparer une enveloppe</h2>
+    <div class="grille">
+      <div><label>Premier contact *</label><select id="contactEnveloppe1" onchange="actualiserEnveloppe()"></select></div>
+      <div><label>Deuxième contact à la même adresse</label><select id="contactEnveloppe2" onchange="actualiserEnveloppe()"></select></div>
+      <div class="pleine"><label>Texte personnalisé facultatif</label><input id="nomFamilleEnveloppe" oninput="actualiserEnveloppe()" placeholder="Exemple : M. et Mme Tremblay"></div>
+    </div>
+    <div id="messageEnveloppe" class="message erreur"></div>
+    <div id="apercuEnveloppe" class="apercu">Choisissez un contact.</div>
+    <button onclick="imprimerEnveloppe()">Imprimer l’enveloppe</button>
+  </section>
+
+  <section id="sauvegarde" class="section">
+    <h2>Sauvegarde des données</h2>
+    <button class="vert" onclick="exporterSauvegarde()">Exporter une sauvegarde</button>
+    <button class="bleu" onclick="document.getElementById('fichierImportation').click()">Importer une sauvegarde</button>
+    <input id="fichierImportation" type="file" accept=".json" style="display:none" onchange="importerSauvegarde(event)">
+    <hr style="margin:28px 0">
+    <h3>Zone dangereuse</h3>
+    <button class="rouge" onclick="effacerToutesLesDonnees()">Effacer toutes les données</button>
+    <div id="messageSauvegarde" class="message"></div>
+  </section>
+
+  <section id="parametres" class="section">
+    <h2>Paramètres — Provenances</h2>
+    <p>Ajoutez ou supprimez une provenance directement ici. Elle apparaîtra automatiquement dans le formulaire des contacts.</p>
+    <div class="grille">
+      <div><label>Nouvelle provenance</label><input id="nouvelleProvenance" placeholder="Exemple : Centris"></div>
+      <div style="align-self:end"><button class="vert" onclick="ajouterProvenance()">Ajouter la provenance</button></div>
+    </div>
+    <div id="messageParametres" class="message"></div>
+    <div id="listeProvenances" class="liste-parametre"></div>
+  </section>
+</div>
+
+<footer>
+  Dany Diamond — Courtier immobilier agréé DA<br>
+  Résidentiel et commercial — 819-247-4777
+</footer>
+
+<script>
+const CLE_CONTACTS='prospectsDanyDiamond';
+const CLE_SUIVIS='suivisDanyDiamond';
+const CLE_PROVENANCES='provenancesDanyDiamond';
+
+const PROVENANCES_DEFAUT=[
+  'Facebook','Google','Site Web','Référence','Soumissions Courtiers',
+  'Visite libre','Appel entrant','Ami ou amie','Ancien client','Autre'
+];
+
+function creerId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function lire(cle){try{return JSON.parse(localStorage.getItem(cle))||[]}catch(e){return []}}
+function obtenirContacts(){const a=lire(CLE_CONTACTS);let m=false;a.forEach(x=>{if(!x.id){x.id=creerId();m=true}});if(m)sauvegarderContacts(a);return a}
+function sauvegarderContacts(a){localStorage.setItem(CLE_CONTACTS,JSON.stringify(a))}
+function obtenirSuivis(){const a=lire(CLE_SUIVIS);let m=false;a.forEach(x=>{if(!x.id){x.id=creerId();m=true}if(x.termine===undefined){x.termine=Boolean(x.complete);m=true}});if(m)sauvegarderSuivis(a);return a}
+function sauvegarderSuivis(a){localStorage.setItem(CLE_SUIVIS,JSON.stringify(a))}
+function obtenirProvenances(){let a=lire(CLE_PROVENANCES);if(!a.length){a=[...PROVENANCES_DEFAUT];sauvegarderProvenances(a)}return a}
+function sauvegarderProvenances(a){localStorage.setItem(CLE_PROVENANCES,JSON.stringify(a))}
+function normaliser(t){return (t||'').toString().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function adresseComplete(c){return [c.adresse,c.ville,c.province,c.codePostal].filter(Boolean).join(', ')}
+function dateLocale(){const d=new Date();d.setHours(0,0,0,0);return d}
+function formaterDate(t){if(!t)return 'Non indiquée';const p=t.split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:t}
+function afficherMessage(id,texte,erreur=false){const z=document.getElementById(id);z.textContent=texte;z.classList.toggle('erreur',erreur);z.style.display='block';setTimeout(()=>z.style.display='none',3500)}
+
+function ouvrirSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='tableauBord')actualiserTableauBord();
+  if(id==='contacts')afficherContacts();
+  if(id==='suivis'){remplirContactsSuivi();afficherSuivis()}
+  if(id==='anniversaires')afficherAnniversaires();
+  if(id==='enveloppes'){remplirContactsEnveloppes();actualiserEnveloppe()}
+  if(id==='parametres')afficherProvenances();
+  window.scrollTo({top:document.querySelector('.container').offsetTop,behavior:'smooth'});
+}
+
+function remplirSelectProvenances(valeur=''){
+  const s=document.getElementById('provenance');s.innerHTML='';
+  obtenirProvenances().forEach(p=>{const o=document.createElement('option');o.textContent=p;o.value=p;if(p===valeur)o.selected=true;s.appendChild(o)});
+}
+
+function ajouterProvenance(){
+  const champ=document.getElementById('nouvelleProvenance');
+  const valeur=champ.value.trim();
+  if(!valeur){alert('Inscrivez une provenance.');return}
+  const a=obtenirProvenances();
+  if(a.some(p=>normaliser(p)===normaliser(valeur))){afficherMessage('messageParametres','Cette provenance existe déjà.',true);return}
+  a.splice(Math.max(a.length-1,0),0,valeur);
+  sauvegarderProvenances(a);champ.value='';remplirSelectProvenances();afficherProvenances();
+  afficherMessage('messageParametres','La provenance a été ajoutée.');
+}
+
+function supprimerProvenance(valeur){
+  if(valeur==='Autre'){alert('La provenance « Autre » doit rester dans la liste.');return}
+  if(!confirm(`Supprimer la provenance « ${valeur} » ?`))return;
+  sauvegarderProvenances(obtenirProvenances().filter(p=>p!==valeur));
+  remplirSelectProvenances();afficherProvenances();
+}
+
+function afficherProvenances(){
+  const z=document.getElementById('listeProvenances');z.innerHTML='';
+  obtenirProvenances().forEach(p=>{
+    const l=document.createElement('div');l.className='ligne-parametre';
+    const n=document.createElement('span');n.textContent=p;
+    const b=document.createElement('button');b.textContent='Supprimer';b.className='rouge';b.style.margin='0';b.onclick=()=>supprimerProvenance(p);
+    l.append(n,b);z.appendChild(l);
+  });
+}
+
+function enregistrerContact(){
+  const prenom=document.getElementById('prenom').value.trim(),nom=document.getElementById('nom').value.trim();
+  if(!prenom||!nom){alert('Veuillez inscrire le prénom et le nom.');return}
+  const id=document.getElementById('idModification').value,contacts=obtenirContacts();
+  const ancien=contacts.find(c=>c.id===id);
+  const c={
+    id:id||creerId(),prenom,nom,
+    telephone:document.getElementById('telephone').value.trim(),
+    telephone2:document.getElementById('telephone2').value.trim(),
+    courriel:document.getElementById('courriel').value.trim(),
+    dateNaissance:document.getElementById('dateNaissance').value,
+    adresse:document.getElementById('adresse').value.trim(),
+    ville:document.getElementById('ville').value.trim(),
+    province:document.getElementById('province').value.trim(),
+    codePostal:document.getElementById('codePostal').value.trim().toUpperCase(),
+    statut:document.getElementById('statut').value,
+    type:document.getElementById('typeContact').value,
+    provenance:document.getElementById('provenance').value,
+    priorite:document.getElementById('priorite').value,
+    commentaires:document.getElementById('commentaires').value.trim(),
+    dateCreation:ancien?.dateCreation||new Date().toISOString()
+  };
+  const i=contacts.findIndex(x=>x.id===c.id);
+  if(i<0)contacts.push(c);else contacts[i]=c;
+  contacts.sort((a,b)=>(a.nom+a.prenom).localeCompare(b.nom+b.prenom,'fr'));
+  sauvegarderContacts(contacts);viderFormulaireContact();
+  afficherMessage('messageContact',i<0?'Le contact a été enregistré.':'Le contact a été modifié.');
+  actualiserTableauBord();
+}
+
+function viderFormulaireContact(){
+  ['idModification','prenom','nom','telephone','telephone2','courriel','dateNaissance','adresse','ville','codePostal','commentaires'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('province').value='Québec';
+  ['statut','typeContact','priorite'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  remplirSelectProvenances();
+  document.getElementById('titreFormulaire').textContent='Ajouter un prospect ou un contact';
+  document.getElementById('boutonEnregistrer').textContent='Enregistrer le contact';
+  document.getElementById('boutonAnnuler').style.display='none';
+}
+
+function modifierContact(id){
+  const c=obtenirContacts().find(x=>x.id===id);if(!c)return;
+  ['prenom','nom','telephone','telephone2','courriel','dateNaissance','adresse','ville','province','codePostal','commentaires'].forEach(k=>document.getElementById(k).value=c[k]||'');
+  document.getElementById('idModification').value=c.id;
+  document.getElementById('statut').value=c.statut||'Prospect';
+  document.getElementById('typeContact').value=c.type||'Acheteur';
+  document.getElementById('priorite').value=c.priorite||'Normale';
+  remplirSelectProvenances(c.provenance||'Facebook');
+  document.getElementById('titreFormulaire').textContent='Modifier le contact';
+  document.getElementById('boutonEnregistrer').textContent='Enregistrer les modifications';
+  document.getElementById('boutonAnnuler').style.display='inline-block';
+  ouvrirSection('prospects');
+}
+
+function supprimerContact(id){
+  const c=obtenirContacts().find(x=>x.id===id);if(!c||!confirm(`Supprimer ${c.prenom} ${c.nom} ?`))return;
+  sauvegarderContacts(obtenirContacts().filter(x=>x.id!==id));
+  sauvegarderSuivis(obtenirSuivis().filter(s=>s.contactId!==id));
+  afficherContacts();actualiserTableauBord();
+}
+
+function afficherContacts(){
+  const rech=normaliser(document.getElementById('rechercheContact').value),statut=document.getElementById('filtreStatut').value,type=document.getElementById('filtreType').value;
+  const a=obtenirContacts().filter(c=>{
+    const t=normaliser([c.prenom,c.nom,c.telephone,c.telephone2,c.courriel,c.adresse,c.ville,c.province,c.codePostal,c.statut,c.type,c.provenance,c.commentaires].join(' '));
+    return (!rech||t.includes(rech))&&(!statut||c.statut===statut)&&(!type||c.type===type);
+  });
+  const z=document.getElementById('listeContacts');z.innerHTML='';
+  if(!a.length){z.innerHTML='<div class="fiche">Aucun contact trouvé.</div>';return}
+  a.forEach(c=>{
+    const f=document.createElement('div');f.className='fiche';
+    const age=c.dateNaissance?calculerAge(c.dateNaissance)+' ans':'Non calculé';
+    f.innerHTML=`<strong>${c.prenom} ${c.nom}</strong><p>Téléphone : ${c.telephone||'Non indiqué'}
+Deuxième téléphone : ${c.telephone2||'Non indiqué'}
+Courriel : ${c.courriel||'Non indiqué'}
+Adresse : ${adresseComplete(c)||'Non indiquée'}
+Date de naissance : ${formaterDate(c.dateNaissance)}
+Âge actuel : ${age}
+Statut : ${c.statut||'Non indiqué'}
+Type : ${c.type||'Non indiqué'}
+Provenance : ${c.provenance||'Non indiquée'}
+Priorité : ${c.priorite||'Normale'}
+Commentaires : ${c.commentaires||'Aucun'}</p>`;
+    const m=document.createElement('button');m.textContent='Modifier';m.onclick=()=>modifierContact(c.id);
+    const s=document.createElement('button');s.textContent='Ajouter un suivi';s.className='bleu';s.onclick=()=>{ouvrirSection('suivis');remplirContactsSuivi(c.id)};
+    const d=document.createElement('button');d.textContent='Supprimer';d.className='rouge';d.onclick=()=>supprimerContact(c.id);
+    f.append(m,s,d);z.appendChild(f);
+  });
+}
+
+function remplirContactsSuivi(selection=''){
+  const s=document.getElementById('contactSuivi');s.innerHTML='<option value="">Choisir un contact</option>';
+  obtenirContacts().forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=`${c.prenom} ${c.nom}`;if(c.id===selection)o.selected=true;s.appendChild(o)});
+}
+
+function enregistrerSuivi(){
+  const contactId=document.getElementById('contactSuivi').value,date=document.getElementById('dateSuivi').value,note=document.getElementById('noteSuivi').value.trim();
+  if(!contactId||!date||!note){alert('Choisissez un contact, une date et inscrivez une note.');return}
+  const c=obtenirContacts().find(x=>x.id===contactId);if(!c)return;
+  const id=document.getElementById('idSuiviModification').value,a=obtenirSuivis();
+  const s={id:id||creerId(),contactId,contactNom:`${c.prenom} ${c.nom}`,date,heure:document.getElementById('heureSuivi').value,type:document.getElementById('typeSuivi').value,priorite:document.getElementById('prioriteSuivi').value,statut:document.getElementById('statutSuivi').value,note,termine:false};
+  const i=a.findIndex(x=>x.id===s.id);if(i<0)a.push(s);else{s.termine=a[i].termine;a[i]=s}
+  a.sort((x,y)=>((x.date||'')+(x.heure||'')).localeCompare((y.date||'')+(y.heure||'')));
+  sauvegarderSuivis(a);viderFormulaireSuivi();remplirContactsSuivi();afficherSuivis();actualiserTableauBord();
+  afficherMessage('messageSuivi',i<0?'Le suivi a été enregistré.':'Le suivi a été modifié.');
+}
+
+function viderFormulaireSuivi(){
+  document.getElementById('idSuiviModification').value='';
+  ['dateSuivi','heureSuivi','noteSuivi'].forEach(id=>document.getElementById(id).value='');
+  ['contactSuivi','typeSuivi','prioriteSuivi','statutSuivi'].forEach(id=>document.getElementById(id).selectedIndex=0);
+  document.getElementById('boutonEnregistrerSuivi').textContent='Enregistrer le suivi';
+  document.getElementById('boutonAnnulerSuivi').style.display='none';
+}
+
+function afficherSuivis(){
+  const z=document.getElementById('listeSuivis'),a=obtenirSuivis().filter(s=>!s.termine);z.innerHTML='';
+  if(!a.length){z.innerHTML='<div class="fiche">Aucun suivi à faire.</div>';return}
+  a.forEach(s=>z.appendChild(creerFicheSuivi(s,true)));
+}
+function creerFicheSuivi(s,boutons){
+  const f=document.createElement('div'),d=new Date(s.date+'T00:00:00'),auj=dateLocale();
+  f.className='fiche '+(d<auj?'retard':d.getTime()===auj.getTime()?'aujourdhui':'futur');
+  f.innerHTML=`<strong>${s.contactNom||'Contact inconnu'}</strong><p>Date : ${formaterDate(s.date)}
+Heure : ${s.heure||'Non indiquée'}
+Type : ${s.type||'Non indiqué'}
+Priorité : ${s.priorite||'Normale'}
+État : ${s.statut||'À faire'}
+Note : ${s.note||''}</p>`;
+  if(boutons){
+    const t=document.createElement('button');t.textContent='Terminé';t.className='vert';t.onclick=()=>terminerSuivi(s.id);
+    const m=document.createElement('button');m.textContent='Modifier';m.onclick=()=>modifierSuivi(s.id);
+    const dlt=document.createElement('button');dlt.textContent='Supprimer';dlt.className='rouge';dlt.onclick=()=>supprimerSuivi(s.id);
+    f.append(t,m,dlt);
+  }
+  return f;
+}
+function terminerSuivi(id){const a=obtenirSuivis(),s=a.find(x=>x.id===id);if(s)s.termine=true;sauvegarderSuivis(a);afficherSuivis();actualiserTableauBord()}
+function supprimerSuivi(id){if(!confirm('Supprimer ce suivi ?'))return;sauvegarderSuivis(obtenirSuivis().filter(x=>x.id!==id));afficherSuivis();actualiserTableauBord()}
+function modifierSuivi(id){
+  const s=obtenirSuivis().find(x=>x.id===id);if(!s)return;
+  remplirContactsSuivi(s.contactId);document.getElementById('idSuiviModification').value=s.id;
+  document.getElementById('dateSuivi').value=s.date||'';document.getElementById('heureSuivi').value=s.heure||'';
+  document.getElementById('typeSuivi').value=s.type||'Appel téléphonique';document.getElementById('prioriteSuivi').value=s.priorite||'Normale';
+  document.getElementById('statutSuivi').value=s.statut||'À faire';document.getElementById('noteSuivi').value=s.note||'';
+  document.getElementById('boutonEnregistrerSuivi').textContent='Enregistrer les modifications';document.getElementById('boutonAnnulerSuivi').style.display='inline-block';
+}
+
+function calculerAge(t){const n=new Date(t+'T00:00:00'),a=new Date();let age=a.getFullYear()-n.getFullYear();if(a.getMonth()<n.getMonth()||(a.getMonth()===n.getMonth()&&a.getDate()<n.getDate()))age--;return age}
+function prochainAnniversaire(t){
+  const n=new Date(t+'T00:00:00'),a=dateLocale();let p=new Date(a.getFullYear(),n.getMonth(),n.getDate());if(p<a)p=new Date(a.getFullYear()+1,n.getMonth(),n.getDate());
+  return {date:p,jours:Math.round((p-a)/86400000),age:p.getFullYear()-n.getFullYear()};
+}
+function afficherAnniversaires(){
+  const z=document.getElementById('listeAnniversaires'),a=obtenirContacts().filter(c=>c.dateNaissance).map(c=>({c,...prochainAnniversaire(c.dateNaissance)})).sort((x,y)=>x.date-y.date);z.innerHTML='';
+  if(!a.length){z.innerHTML='<div class="fiche">Aucune date de naissance enregistrée.</div>';return}
+  a.forEach(x=>{const f=document.createElement('div');f.className='fiche';f.innerHTML=`<strong>${x.c.prenom} ${x.c.nom}</strong><p>Date de naissance : ${formaterDate(x.c.dateNaissance)}
+Prochain anniversaire : ${x.date.toLocaleDateString('fr-CA')}
+Âge au prochain anniversaire : ${x.age} ans
+${x.jours===0?'Anniversaire aujourd’hui':x.jours===1?'Anniversaire demain':`Dans ${x.jours} jours`}</p>`;z.appendChild(f)});
+}
+
+function remplirContactsEnveloppes(){
+  const a=obtenirContacts(),s1=document.getElementById('contactEnveloppe1'),s2=document.getElementById('contactEnveloppe2');
+  s1.innerHTML='<option value="">Choisir un contact</option>';s2.innerHTML='<option value="">Aucun deuxième contact</option>';
+  a.forEach(c=>{[s1,s2].forEach(s=>{const o=document.createElement('option');o.value=c.id;o.textContent=`${c.prenom} ${c.nom}`;s.appendChild(o)})});
+}
+function actualiserEnveloppe(){
+  const id1=document.getElementById('contactEnveloppe1').value,id2=document.getElementById('contactEnveloppe2').value,txt=document.getElementById('nomFamilleEnveloppe').value.trim(),z=document.getElementById('apercuEnveloppe');
+  if(!id1){z.textContent='Choisissez un contact.';return}
+  if(id1===id2){document.getElementById('contactEnveloppe2').value='';afficherMessage('messageEnveloppe','Choisissez deux contacts différents.',true);return}
+  const a=obtenirContacts(),c1=a.find(c=>c.id===id1),c2=a.find(c=>c.id===id2);if(!c1)return;
+  if(c2&&normaliser(adresseComplete(c1))!==normaliser(adresseComplete(c2)))afficherMessage('messageEnveloppe','Attention : les deux adresses sont différentes. L’adresse du premier contact sera utilisée.',true);
+  const noms=txt?txt:c2?`${c1.prenom} ${c1.nom}<br>${c2.prenom} ${c2.nom}`:`${c1.prenom} ${c1.nom}`;
+  z.innerHTML=`<strong>${noms}</strong><br><br>${adresseComplete(c1)||'Adresse non indiquée'}`;
+}
+function imprimerEnveloppe(){
+  if(!document.getElementById('contactEnveloppe1').value){alert('Choisissez un contact.');return}
+  const contenu=document.getElementById('apercuEnveloppe').innerHTML,w=window.open('','','width=950,height=550');if(!w){alert('Autorisez les fenêtres contextuelles.');return}
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><style>@page{size:9.5in 4.125in;margin:0}body{margin:0;width:9.5in;height:4.125in;font-family:Arial;position:relative}.a{position:absolute;top:1.4in;left:4.1in;font-size:18px;line-height:1.5}</style></head><body><div class="a">${contenu}</div></body></html>`);
+  w.document.close();setTimeout(()=>{w.focus();w.print()},500);
+}
+
+function actualiserTableauBord(){
+  const c=obtenirContacts(),s=obtenirSuivis().filter(x=>!x.termine),auj=dateLocale();
+  const r=s.filter(x=>new Date(x.date+'T00:00:00')<auj),ann=c.filter(x=>x.dateNaissance&&prochainAnniversaire(x.dateNaissance).jours<=30);
+  document.getElementById('statContacts').textContent=c.length;document.getElementById('statSuivis').textContent=s.length;document.getElementById('statRetards').textContent=r.length;document.getElementById('statAnniversaires').textContent=ann.length;
+  const z=document.getElementById('listeSuivisUrgents');z.innerHTML='';const lim=new Date(auj);lim.setDate(lim.getDate()+7);
+  const u=s.filter(x=>new Date(x.date+'T00:00:00')<=lim).slice(0,10);if(!u.length){z.innerHTML='<div class="fiche">Aucun suivi urgent.</div>';return}u.forEach(x=>z.appendChild(creerFicheSuivi(x,false)));
+}
+
+function exporterSauvegarde(){
+  const data={version:2,dateExportation:new Date().toISOString(),contacts:obtenirContacts(),suivis:obtenirSuivis(),provenances:obtenirProvenances()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`sauvegarde-crm-dany-diamond-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);
+  afficherMessage('messageSauvegarde','La sauvegarde a été exportée.');
+}
+function importerSauvegarde(e){
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.contacts)||!Array.isArray(d.suivis))throw new Error();if(!confirm('Remplacer les données actuelles ?'))return;sauvegarderContacts(d.contacts);sauvegarderSuivis(d.suivis);if(Array.isArray(d.provenances))sauvegarderProvenances(d.provenances);remplirSelectProvenances();actualiserTableauBord();afficherMessage('messageSauvegarde','Sauvegarde importée.')}catch(err){afficherMessage('messageSauvegarde','Fichier invalide.',true)}e.target.value=''};
+  r.readAsText(f);
+}
+function effacerToutesLesDonnees(){
+  if(!confirm('Effacer tous les contacts, suivis et provenances personnalisées ?'))return;
+  if(!confirm('Confirmez-vous encore ?'))return;
+  localStorage.removeItem(CLE_CONTACTS);localStorage.removeItem(CLE_SUIVIS);localStorage.removeItem(CLE_PROVENANCES);
+  remplirSelectProvenances();actualiserTableauBord();afficherMessage('messageSauvegarde','Toutes les données ont été effacées.');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{obtenirProvenances();remplirSelectProvenances();actualiserTableauBord()});
+</script>
+</body>
+</html>
